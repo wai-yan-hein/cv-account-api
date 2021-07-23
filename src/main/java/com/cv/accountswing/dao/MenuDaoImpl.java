@@ -181,7 +181,7 @@ public class MenuDaoImpl extends AbstractDao<String, Menu> implements MenuDao {
 
     @Override
     public List getReports(String roleCode) {
-        String hsql = "select o from VRoleMenu o where o.key.roleCode = " + roleCode + " and o.menuType = 'Reports' and o.isAllow = true";
+        String hsql = "select o from VRoleMenu o where o.key.roleCode = '" + roleCode + "' and o.menuType = 'Report' and o.isAllow = true";
         return findHSQL(hsql);
     }
 

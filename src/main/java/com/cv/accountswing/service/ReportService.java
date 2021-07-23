@@ -30,7 +30,7 @@ public interface ReportService {
             String vouNo, String cvId, String userCode, String glVouNo, String deptName, String traderName);
 
     public void genBalanceSheet(String from, String to, String dept,
-            String compCode, String curr, String macId, String process) throws Exception;
+            String compCode, String curr, String macId, String process, String inventory) throws Exception;
 
     public Object getAggResult(String sql);
 }

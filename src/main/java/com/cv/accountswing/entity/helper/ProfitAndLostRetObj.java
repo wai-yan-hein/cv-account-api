@@ -88,4 +88,5 @@ public class ProfitAndLostRetObj {
         costOfSale = (ttlOPStock + ttlPurchase - ttlCLStock);
         return costOfSale;
     }
+    
 }

@@ -64,16 +64,18 @@ public class ReportServiceImpl implements ReportService {
         to = Util1.toDateStrMYSQL(to, "dd/MM/yyyy");
         String tmpFrom = Util1.addDateTo(from, -1);
         tmpFrom = Util1.toDateStrMYSQL(tmpFrom, "dd/MM/yyyy");
+        String invCode = getCOACode(inventory, comp);
+        inventory = invCode.equals("-") ? "'" + inventory + "'" : invCode;
         //Sales Income 
         for (String tmp : process) {
             switch (tmp) {
                 case "os":
                     try {
-                    String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),(dr_amt+cr_amt) acc_total,\n"
+                    String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),if(dr_amt>0,dr_amt*-1,cr_amt) acc_toal,\n"
                             + "'" + comp + "'," + sortOrder + "," + macId + "\n"
                             + "from tmp_op_cl\n"
                             + "where mac_id = " + macId + " \n"
-                            + "and coa_code = '" + inventory + "'";
+                            + "and coa_code in (" + inventory + ")";
                     dao.execSQLRpt(strInsert + "\n" + sql);
                 } catch (Exception e) {
                     logger.error("OS :" + e.getMessage());
@@ -84,7 +86,7 @@ public class ReportServiceImpl implements ReportService {
                     String strCS = "select coa_code,curr_code,dept_code,amount,\n"
                             + "'" + comp + "'," + sortOrder + "," + macId + "\n"
                             + "from stock_op_value\n"
-                            + "where coa_code = '" + inventory + "'\n"
+                            + "where  coa_code in (" + inventory + ")\n"
                             + "and dept_code = '" + dept + "' or '-' ='" + dept + "'\n"
                             + "and comp_code = '" + comp + "'\n"
                             + "and curr_code = '" + currency + "'\n"
@@ -96,6 +98,7 @@ public class ReportServiceImpl implements ReportService {
                 break;
                 default:
                     String coaCode = getCOACode(tmp, comp);
+                    coaCode = coaCode.equals("-") ? "" : coaCode;
                     try {
                         String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),if(dr_amt>0,dr_amt*-1,cr_amt) acc_toal,\n"
                                 + "'" + comp + "'," + sortOrder + "," + macId + "\n"
@@ -175,7 +178,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void genBalanceSheet(String from, String to, String dept,
-            String compCode, String curr, String macId, String blProcess) throws Exception {
+            String compCode, String curr, String macId, String blProcess, String inventory) throws Exception {
+        String invCode = getCOACode(inventory, compCode);
+        inventory = invCode.equals("-") ? "'" + inventory + "'" : invCode;
         String strSqlDelete = "delete from tmp_balance_sheet where mac_id = '" + macId + "'";
         dao.execSQLRpt(strSqlDelete);
         String strInsert = "insert into tmp_balance_sheet(acc_code,curr_code,dept_code,\n "
@@ -192,6 +197,11 @@ public class ReportServiceImpl implements ReportService {
             dao.execSQLRpt(strInsert + "\n" + sql);
             sortOrder++;
         }
+        String updateSql = "update tmp_balance_sheet tmp,\n"
+                + "(select amount*(-1) acc_total,coa_code from stock_op_value where date(tran_date) = '" + to + "') op\n"
+                + "set tmp.acc_total = op.acc_total\n"
+                + "where tmp.acc_code = op.coa_code ";
+        dao.execSQLRpt(updateSql);
     }
 
     @Override

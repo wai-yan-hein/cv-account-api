@@ -103,10 +103,23 @@ public class COADaoImpl extends AbstractDao<String, ChartOfAccount> implements C
 
     @Override
     public int delete(String code, String compCode) {
-        String strSql = "delete from ChartOfAccount o where o.code = '"
+        int status = 10;
+        //check gl
+        String delSql = "delete from ChartOfAccount o where o.code = '"
                 + code + "' and o.compCode = '" + compCode + "'";
-        int cnt = execUpdateOrDelete(strSql);
-        return cnt;
+        String vSql = "select distinct o.sourceAcId,o.accountId from Gl o where (o.sourceAcId ='" + code + "' or o.accountId = '" + code + "')"
+                + " and o.compCode = '" + compCode + "'";
+        //check opening
+        String opSql = "select distinct o.sourceAccId from COAOpening o where o.sourceAccId = '" + code + "' and o.compCode = '" + compCode + "'";
+        //check trader 
+        String tSql = "select distinct o.account.code from Trader o where o.account.code = '" + code + "' and o.compCode = '" + compCode + "'";
+        List listOP = findHSQLList(opSql);
+        List listGl = findHSQLList(vSql);
+        List listTrader = findHSQLList(tSql);
+        if (listOP.isEmpty() && listGl.isEmpty() && listTrader.isEmpty()) {
+            status = execUpdateOrDelete(delSql);
+        }
+        return status;
     }
 
     @Override
@@ -117,28 +130,6 @@ public class COADaoImpl extends AbstractDao<String, ChartOfAccount> implements C
         return listCOA;
     }
 
-    /*    @Override
-    public List<COALevel> getParentChildCOA(String compCode) {
-        String strSql = "select o from COALevel o ";
-        String strFilter = "";
-
-        if (!compCode.equals("-")) {
-            if (strFilter.isEmpty()) {
-                strFilter = "o.compCode is null";
-            } else {
-                strFilter = strFilter + " and o.compCode is null";
-            }
-        }
-
-        if (!strFilter.isEmpty()) {
-            strSql = strSql + " where " + strFilter;
-        }
-
-        List<COALevel> listCOAL = findHSQLPC(strSql, "compFilter", "companyParam",
-                compCode);
-        return listCOAL;
-    }
-     */
     @Override
     public List<ChartOfAccount> getCOALevel3Above(String compCode) {
         String strSql = "select o from ChartOfAccount o where o.compCode = '"
@@ -239,8 +230,8 @@ public class COADaoImpl extends AbstractDao<String, ChartOfAccount> implements C
     }
 
     @Override
-    public List<ChartOfAccount> findAll() {
-        String hsql = "select o from ChartOfAccount o  order by o.coaLevel";
+    public List<ChartOfAccount> findAll(String compCode) {
+        String hsql = "select o from ChartOfAccount o  where o.compCode = '" + compCode + "' order by o.coaLevel";
         List<ChartOfAccount> ListCOA = findHSQL(hsql);
         return ListCOA;
 
@@ -250,5 +241,30 @@ public class COADaoImpl extends AbstractDao<String, ChartOfAccount> implements C
     public List<ChartOfAccount> getLevelOneTwo(String compCode) {
         String hsql = "select o from ChartOfAccount o where o.coaLevel in (1,2) and o.compCode = '" + compCode + "'";
         return findHSQL(hsql);
+    }
+
+    @Override
+    public List<ChartOfAccount> getUnusedCOA(String compCode) {
+        List<ChartOfAccount> unused = new ArrayList<>();
+        List<ChartOfAccount> listCOA = getCOALevel3Above(compCode);
+        if (!listCOA.isEmpty()) {
+            listCOA.forEach(coa -> {
+                String code = coa.getCode();
+                String hsql = "select distinct o.sourceAcId,o.accountId from Gl o "
+                        + "where (o.sourceAcId = '" + code + "' or o.accountId = '" + code + "') "
+                        + " and o.compCode = '" + compCode + "'";
+                List list = findHSQLList(hsql);
+                if (list.isEmpty()) {
+                    //unused
+                    String hsql1 = "select distinct o.sourceAccId from COAOpening o "
+                            + " where o.sourceAccId = '" + code + "' and o.compCode = '" + compCode + "'";
+                    List list1 = findHSQLList(hsql1);
+                    if (list1.isEmpty()) {
+                        unused.add(coa);
+                    }
+                }
+            });
+        }
+        return unused;
     }
 }

@@ -43,7 +43,7 @@ public class COAServiceImpl implements COAService {
 
     @Override
     public ChartOfAccount save(ChartOfAccount coa, String opDate) throws Exception {
-        coaOpDao.insertCoaOpening(opDate, coa.getCompCode().toString(), "-", "-", coa.getCreatedBy());
+        coaOpDao.insertCoaOpening(opDate, coa.getCompCode(), "-", "-", coa.getCreatedBy());
         return save(coa);
     }
 
@@ -128,12 +128,17 @@ public class COAServiceImpl implements COAService {
     }
 
     @Override
-    public List<ChartOfAccount> findAll() {
-        return dao.findAll();
+    public List<ChartOfAccount> findAll(String compCode) {
+        return dao.findAll(compCode);
     }
 
     @Override
     public List<ChartOfAccount> getLevelOneTwo(String compCode) {
         return dao.getLevelOneTwo(compCode);
+    }
+
+    @Override
+    public List<ChartOfAccount> getUnusedCOA(String compCode) {
+        return dao.getUnusedCOA(compCode);
     }
 }

@@ -18,7 +18,7 @@ public interface COADao {
 
     public ChartOfAccount findById(String id);
 
-    public List<ChartOfAccount> findAll();
+    public List<ChartOfAccount> findAll(String compCode);
 
     public List<ChartOfAccount> search(String code, String name, String compCode,
             String level, String parent, String userParent, String usrCoaCode);
@@ -45,5 +45,7 @@ public interface COADao {
     public List<ChartOfAccount> searchWhereIn(String strList, String compCode);
 
     public List<ChartOfAccount> getLevelOneTwo(String compCode);
+
+    public List<ChartOfAccount> getUnusedCOA(String compCode);
 
 }

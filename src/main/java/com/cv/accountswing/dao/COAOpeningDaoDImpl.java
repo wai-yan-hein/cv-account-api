@@ -92,14 +92,7 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implemen
     @Override
     public List<TmpOpeningClosing> getOpBalance(String coaCode, int level, String opDate,
             String curr, String userCode) throws Exception {
-        //deleteTmp(userCode);
-        /*String strDeleteSql1 = "delete from tmp_op_filter where user_code = '" +
-         userCode + "'";
-         String strDeleteSql2 = "delete from tmp_op_cl where user_code = '" + userCode + "'";
-        
-         execSQL(strDeleteSql1, strDeleteSql2);*/
         insertFilter(coaCode, level, opDate, curr, userCode);
-
         String strSql = "insert into tmp_op_cl(coa_code, curr_id, user_code, opening, dr_amt, cr_amt) "
                 + "select a.coa_code, a.curr_id, '" + userCode + "', sum(ifnull(a.balance,0)), 0, 0 "
                 + "from (select tof.comp_code, tof.coa_code, tof.curr_id, aod.ex_rate, aod.dr_amt, "
@@ -238,8 +231,8 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implemen
     }
 
     @Override
-    public void genTriBalance1(String compCode, String opDate,
-            String tranDate, String coaCode, String currency, String dept,
+    public void genTriBalance1(String compCode, String stDate,
+            String enDate, String coaCode, String currency, String dept,
             String cvId, String userCode, String macId) throws Exception {
         deleteTmp(Integer.parseInt(macId));
         logger.info("inserting fileter");
@@ -249,7 +242,7 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implemen
                 + "select comp_code, source_acc_id, ifnull(dept_code, '-') as dept_code, cur_code, \n"
                 + "ifnull(coa.tran_source, '-') tran_source, max(op_date) as op_date\n"
                 + "from coa_opening coa\n"
-                + "where coa.op_date = '" + opDate + "' and ifnull(coa.tran_source, '-') = 'OPENING'\n"
+                + "where coa.op_date = '" + stDate + "' and ifnull(coa.tran_source, '-') = 'OPENING'\n"
                 + "and (coa.comp_code = '" + compCode + "' or '-' = '" + compCode + "') and "
                 + "(coa.cur_code = '" + currency + "' or '-' = '" + currency + "') "
                 + "and (coa.dept_code = '" + dept + "' or '-' = '" + dept + "') \n"
@@ -262,36 +255,13 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implemen
         execSQL(strSqlFilter);
         logger.info("inserting fileter end.");
         logger.info("inserting opeinging.");
-        /*String strSql = "insert into tmp_op_cl(coa_code, curr_id, user_code, dr_amt, cr_amt,mac_id) \n"
-        + "select coa_code, curr_id, '1', if(sum(dr_amt-cr_amt)>0, sum(dr_amt-cr_amt),0), if(sum(dr_amt-cr_amt)<0, sum(dr_amt-cr_amt)*-1,0), '" + macId + "'\n"
-        + "from (\n"
-        + "	select op.source_acc_id as coa_code, op.cur_code as curr_id,\n"
-        + "		   sum(ifnull(op.dr_amt,0)) dr_amt, sum(ifnull(op.cr_amt,0)) cr_amt\n"
-        + "	from  coa_opening op\n"
-        + "	where date(op.op_date) = '" + opDate + "' \n"
-        + "		and (op.dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
-        + "	group by op.source_acc_id, op.cur_code\n"
-        + "			union all\n"
-        + "	select tof.coa_code, tof.curr_id,sum(get_dr_cr_amt(gl.source_ac_id, gl.account_id, \n"
-        + "			tof.coa_code, ifnull(gl.dr_amt,0), ifnull(gl.cr_amt,0), 'DR')) dr_amt,\n"
-        + "            sum(get_dr_cr_amt(gl.source_ac_id, gl.account_id, tof.coa_code, ifnull(gl.dr_amt,0), \n"
-        + "			ifnull(gl.cr_amt,0), 'CR')) cr_amt\n"
-        + "	from tmp_gl_filter tof, gl 	 \n"
-        + "	where tof.dept_code = gl.dept_code and date(gl.gl_date) between '" + opDate + "' \n"
-        + "        and '" + tranDate + "' and (gl.dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
-        + "        and tof.comp_code = gl.comp_code \n"
-        + "        and (tof.coa_code = gl.source_ac_id or tof.coa_code = gl.account_id) \n"
-        + "        and tof.curr_id = gl.from_cur_id and tof.user_code = '" + userCode + "' and tof.mac_id = " + macId + "\n"
-        + "	group by tof.coa_code, tof.curr_id, gl.source_ac_id, gl.account_id) a \n"
-        + "group by coa_code, curr_id";
-        execSQL(strSql);*/
         String strSql1 = "insert into tmp_op_cl(coa_code, curr_id, user_code, dr_amt, cr_amt,mac_id) \n"
                 + "select coa_code, curr_id, '" + userCode + "', if(sum(dr_amt-cr_amt)>0, sum(dr_amt-cr_amt),0), if(sum(dr_amt-cr_amt)<0, sum(dr_amt-cr_amt)*-1,0), " + macId + "\n"
                 + "from (\n"
                 + "	select op.source_acc_id as coa_code, op.cur_code as curr_id,\n"
                 + "		   sum(ifnull(op.dr_amt,0)) dr_amt, sum(ifnull(op.cr_amt,0)) cr_amt\n"
                 + "	from  coa_opening op\n"
-                + "	where date(op.op_date) = '" + opDate + "' \n"
+                + "	where date(op.op_date) = '" + stDate + "' \n"
                 + "		and (op.dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
                 + "	group by op.source_acc_id, op.cur_code\n"
                 + "			union all\n"
@@ -301,8 +271,8 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implemen
                 + "			ifnull(gl.cr_amt,0), 'CR')) cr_amt\n"
                 + "     from gl \n"
                 + "     where gl.account_id in (select coa_code from tmp_gl_filter where mac_id =" + macId + ")\n"
-                + "     and gl.dept_code = gl.dept_code and date(gl.gl_date) between '" + opDate + "' \n"
-                + "        and '" + tranDate + "' and (gl.dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
+                + "     and gl.dept_code = gl.dept_code and date(gl.gl_date) between '" + stDate + "' \n"
+                + "        and '" + enDate + "' and (gl.dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
                 + "        and gl.comp_code = '" + compCode + "'\n"
                 + "     group by gl.account_id, gl.from_cur_id, gl.source_ac_id, gl.account_id"
                 + "                     union all \n"
@@ -312,8 +282,8 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implemen
                 + "			ifnull(gl.cr_amt,0), 'CR')) cr_amt\n"
                 + "     from gl \n"
                 + "     where gl.source_ac_id in (select coa_code from tmp_gl_filter where mac_id =" + macId + ")\n"
-                + "     and gl.dept_code = gl.dept_code and date(gl.gl_date) between '" + opDate + "' \n"
-                + "        and '" + tranDate + "' and (gl.dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
+                + "     and gl.dept_code = gl.dept_code and date(gl.gl_date) between '" + stDate + "' \n"
+                + "        and '" + enDate + "' and (gl.dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
                 + "        and gl.comp_code = '" + compCode + "'\n"
                 + "     group by gl.account_id, gl.from_cur_id, gl.source_ac_id, gl.account_id) a \n"
                 + "     group by coa_code, curr_id";
