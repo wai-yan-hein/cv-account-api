@@ -6,6 +6,7 @@
 package com.cv.accountswing.dao;
 
 import com.cv.accountswing.entity.ChartOfAccount;
+import com.cv.accountswing.entity.view.VCOA;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -266,5 +267,11 @@ public class COADaoImpl extends AbstractDao<String, ChartOfAccount> implements C
             });
         }
         return unused;
+    }
+
+    @Override
+    public List<VCOA> getCOAView(String compCode) {
+        String hsql = "select o from VCOA o where o.compCode = '" + compCode + "'";
+        return findHSQLList(hsql);
     }
 }

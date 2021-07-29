@@ -5,6 +5,7 @@
  */
 package com.cv.inv.service;
 
+import com.cv.accountswing.service.MachineInfoService;
 import com.cv.inv.dao.MachineInfoDao;
 import com.cv.inv.entity.MachineInfo;
 import java.util.List;

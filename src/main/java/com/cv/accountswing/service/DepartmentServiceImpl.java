@@ -7,8 +7,6 @@ package com.cv.accountswing.service;
 
 import com.cv.accountswing.dao.DepartmentDao;
 import com.cv.accountswing.entity.Department;
-import com.cv.accountswing.entity.SystemProperty;
-import com.cv.accountswing.entity.SystemPropertyKey;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

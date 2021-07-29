@@ -1,17 +1,8 @@
 package com.cv.accountswing.dao;
 
-import com.cv.account.api.util.ZipFile;
-import com.cv.accountswing.common.CVWork;
-import com.cv.accountswing.util.Util1;
-import com.google.gson.stream.JsonWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.util.Date;
 import java.lang.reflect.ParameterizedType;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -256,59 +246,6 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         return jp;
     }
 
-    public String genJSONFile(final String strSql) throws Exception {
-
-        String filePath = Util1.getAppWorkFolder() + File.separator + "zipFile" + File.separator;
-        String fileName = UUID.randomUUID().toString();
-        String zipFileName = "";
-
-        CVWork work = new CVWork(strSql);
-        doWork(work);
-        Connection con = work.getCon();
-
-//        while (!work.isStatus()) {
-//            System.out.println("Waiting.");
-//        }
-        try {
-            PreparedStatement pstmt = con.prepareStatement(strSql);
-            ResultSet rsFile = pstmt.executeQuery();
-            int ttlCols = rsFile.getMetaData().getColumnCount();
-            FileOutputStream fos = new FileOutputStream(filePath + fileName + ".json");
-            OutputStreamWriter isr = new OutputStreamWriter(fos, "UTF-8");
-
-            try ( JsonWriter writer = new JsonWriter(isr)) {
-                writer.beginObject();
-                writer.name("data");
-                writer.beginArray();
-
-                while (rsFile.next()) {
-
-                    writer.beginObject();
-                    for (int i = 1; i <= ttlCols; i++) {
-
-                        String colName = rsFile.getMetaData().getColumnName(i);
-                        writer.name(colName).value(rsFile.getString(colName));
-                    }
-                    writer.endObject();
-                }
-
-                writer.endArray();
-                writer.endObject();
-                writer.close();
-            }
-            ZipFile zf = new ZipFile();
-            zipFileName = zf.zipFiles(filePath, fileName + ".json");
-
-        } catch (IOException | SQLException ex) {
-            logger.error("getResultSet : " + strSql + " : " + ex.getMessage());
-        }
-
-        if (zipFileName.isEmpty()) {
-            logger.error("Invalid File : " + zipFileName);
-        }
-        return zipFileName;
-    }
-
     public ResultSet getResultSet(final String strSql) throws Exception {
         rs = null;
 
@@ -326,96 +263,5 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         doWork(work);
 
         return rs;
-    }
-
-    public ResultSet getPro(String procName, String... parameters) {
-
-        String strSQL = "{call " + procName + "(";
-        ResultSet resultSet = null;
-        CVWork work = new CVWork(strSQL);
-        doWork(work);
-        Connection con = work.getCon();
-
-        try {
-            String tmpStr = "";
-            for (int i = 0; i < parameters.length; i++) {
-                if (tmpStr.isEmpty()) {
-                    tmpStr = "?";
-                } else {
-                    tmpStr = tmpStr + ",?";
-                }
-            }
-
-            strSQL = strSQL + tmpStr + ")}";
-
-            statement = con.prepareCall(strSQL);
-
-            int i = 1;
-            for (Object obj : parameters) {
-                if (obj instanceof Date) {
-                    ((CallableStatement) statement).setString(i, Util1.toDateTimeStrMYSQL(obj.toString()));
-                } else {
-                    ((CallableStatement) statement).setString(i, obj.toString());
-                }
-
-                i++;
-            }
-            resultSet = ((CallableStatement) statement).executeQuery();
-
-        } catch (SQLException ex) {
-            logger.error("getPro2 : " + ex.getStackTrace()[0].getLineNumber() + " - " + ex.getMessage());
-        }
-
-        return resultSet;
-    }
-
-    public String genJSON(final String strSql) throws Exception {
-
-        String filePath = Util1.getAppWorkFolder() + File.separator + "zipFile" + File.separator;
-        String fileName = UUID.randomUUID().toString();
-        String jsonFile = "";
-
-        CVWork work = new CVWork(strSql);
-        doWork(work);
-        Connection con = work.getCon();
-
-//        while (!work.isStatus()) {
-//            System.out.println("Waiting.");
-//        }
-        try {
-            PreparedStatement pstmt = con.prepareStatement(strSql);
-            ResultSet rsFile = pstmt.executeQuery();
-            int ttlCols = rsFile.getMetaData().getColumnCount();
-            FileOutputStream fos = new FileOutputStream(filePath + fileName + ".json");
-            OutputStreamWriter isr = new OutputStreamWriter(fos, "UTF-8");
-
-            try ( JsonWriter writer = new JsonWriter(isr)) {
-                writer.beginObject();
-                writer.name("data");
-                writer.beginArray();
-
-                while (rsFile.next()) {
-
-                    writer.beginObject();
-                    for (int i = 1; i <= ttlCols; i++) {
-
-                        String colName = rsFile.getMetaData().getColumnName(i);
-                        writer.name(colName).value(rsFile.getString(colName));
-                    }
-                    writer.endObject();
-                }
-
-                writer.endArray();
-                writer.endObject();
-                writer.close();
-            }
-
-            jsonFile = filePath + fileName + ".json";
-
-        } catch (IOException | SQLException ex) {
-            logger.error("getResultSet : " + strSql + " : " + ex.getMessage());
-        }
-
-        return jsonFile;
     }
 }

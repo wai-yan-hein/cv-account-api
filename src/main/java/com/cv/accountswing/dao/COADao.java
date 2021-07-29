@@ -6,6 +6,7 @@
 package com.cv.accountswing.dao;
 
 import com.cv.accountswing.entity.ChartOfAccount;
+import com.cv.accountswing.entity.view.VCOA;
 import java.util.List;
 
 /**
@@ -47,5 +48,7 @@ public interface COADao {
     public List<ChartOfAccount> getLevelOneTwo(String compCode);
 
     public List<ChartOfAccount> getUnusedCOA(String compCode);
+
+    public List<VCOA> getCOAView(String compCode);
 
 }

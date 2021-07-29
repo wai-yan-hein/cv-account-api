@@ -50,7 +50,6 @@ public class VGl implements java.io.Serializable {
     private String tCurName;
     private String deptName;
     private String deptUsrCode;
-    private String bankName;
     private String traderName;
     private String traderType;
     private String glVouNo;
@@ -335,15 +334,6 @@ public class VGl implements java.io.Serializable {
         this.deptUsrCode = deptUsrCode;
     }
 
-    @Column(name = "bank_name")
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
     @Column(name = "trader_name")
     public String getTraderName() {
         return traderName;
@@ -480,4 +470,3 @@ public class VGl implements java.io.Serializable {
     }
 
 }
-

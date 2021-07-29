@@ -5,8 +5,8 @@
  */
 package com.cv.accountswing.service;
 
-import com.cv.accountswing.dao.CoaTemplateDao;
-import com.cv.accountswing.entity.CoaTemplate;
+import com.cv.accountswing.dao.TroubleShootDao;
+import java.sql.ResultSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,27 +14,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author winswe
+ * @author Lenovo
  */
 @Service
 @Transactional
-public class CoaTemplateServiceImpl implements CoaTemplateService{
-    
+public class TroubleShootServiceImpl implements TroubleShootService {
+
     @Autowired
-    private CoaTemplateDao dao;
-    
+    private TroubleShootDao dao;
+
     @Override
-    public CoaTemplate save(CoaTemplate coat){
-        return dao.save(coat);
+    public ResultSet executeQuery(String query) {
+        return dao.executeQuery(query);
     }
-    
+
     @Override
-    public List<CoaTemplate> search(String companyType, String coaCode){
-        return dao.search(companyType, coaCode);
+    public List<String> shootTri() throws Exception {
+        return dao.shootTri();
     }
-    
+
     @Override
-    public int delete(String id){
-        return dao.delete(id);
+    public List<String> shootAPAR() throws Exception {
+        return dao.shootAPAR();
     }
+
 }

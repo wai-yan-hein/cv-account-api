@@ -8,7 +8,6 @@ package com.cv.accountswing.dao;
 
 import com.cv.accountswing.util.Util1;
 import com.cv.accountswing.entity.temp.TmpOpeningClosing;
-import com.cv.accountswing.entity.view.VAccOpeningD;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,23 +18,9 @@ import org.springframework.stereotype.Repository;
  * @author winswe
  */
 @Repository
-public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implements COAOpeningDaoD {
+public class COAOpeningDaoDImpl extends AbstractDao<Long, TmpOpeningClosing> implements COAOpeningDaoD {
 
     private static final Logger logger = LoggerFactory.getLogger(COAOpeningDaoDImpl.class);
-
-    @Override
-    public List<VAccOpeningD> search(String tranIdH) {
-        String strSql = "select o from VAccOpeningD o where o.tranIdH = " + tranIdH;
-        List<VAccOpeningD> listVOAD = findHSQLList(strSql);
-        return listVOAD;
-    }
-
-    @Override
-    public int delete(String tranId) {
-        String strSql = "delete from AccOpeningD o where o.tranId = " + tranId;
-        int cnt = execUpdateOrDelete(strSql);
-        return cnt;
-    }
 
     @Override
     public void insertFilter(String coaCode, int level, String opDate,
@@ -193,7 +178,7 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, VAccOpeningD> implemen
     }
 
     @Override
-    public void genArAp1(String compCode, String fromDate, String opDate,
+    public void genArAp1(String compCode, String fromDate,
             String tranDate, String coaCode, String currency, String dept,
             String traderCode, String macId) throws Exception {
         String delSql = "delete from tmp_op_cl_apar where mac_id = '" + macId + "'";

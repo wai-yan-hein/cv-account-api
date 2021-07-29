@@ -6,6 +6,7 @@
 package com.cv.accountswing.service;
 
 import com.cv.accountswing.entity.ChartOfAccount;
+import com.cv.accountswing.entity.view.VCOA;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface COAService {
 
-    public ChartOfAccount save(ChartOfAccount coa);
+    public ChartOfAccount save(ChartOfAccount coa) throws Exception;
 
     public ChartOfAccount save(ChartOfAccount coa, String opDate) throws Exception;
 
@@ -47,4 +48,6 @@ public interface COAService {
     public List<ChartOfAccount> getLevelOneTwo(String compCode);
 
     public List<ChartOfAccount> getUnusedCOA(String compCode);
+
+    public List<VCOA> getCOAView(String compCode);
 }

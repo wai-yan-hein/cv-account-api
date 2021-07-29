@@ -5,6 +5,7 @@
  */
 package com.cv.accountswing.service;
 
+import com.cv.accountswing.common.DuplicateException;
 import com.cv.accountswing.dao.GlDao;
 import com.cv.accountswing.entity.Gl;
 import com.cv.accountswing.util.Util1;
@@ -33,12 +34,16 @@ public class GlServiceImpl implements GlService {
             String compCode = gl.getCompCode();
             String period = Util1.toDateStr(Util1.getTodayDate(), "MM");
             String glCode = getGLCode(macId, "GL", period, compCode);
-            gl.setGlCode(glCode);
+            Gl valid = findById(glCode);
+            if (valid == null) {
+                gl.setGlCode(glCode);
+            } else {
+                throw new DuplicateException("Duplicate Code.");
+            }
         } else {
             dao.backup(gl.getGlCode(), "EDIT", gl.getModifyBy(), gl.getMacId());
         }
-        dao.save(gl);
-        return gl;
+        return dao.save(gl);
     }
 
     @Override

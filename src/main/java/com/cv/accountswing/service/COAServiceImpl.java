@@ -5,9 +5,11 @@
  */
 package com.cv.accountswing.service;
 
+import com.cv.accountswing.common.DuplicateException;
 import com.cv.accountswing.dao.COADao;
 import com.cv.accountswing.dao.COAOpeningDao;
 import com.cv.accountswing.entity.ChartOfAccount;
+import com.cv.accountswing.entity.view.VCOA;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,18 +28,21 @@ public class COAServiceImpl implements COAService {
     @Autowired
     private COAOpeningDao coaOpDao;
     @Autowired
-    SeqTableService seqService;
-    @Autowired
-    SystemPropertyService spService;
+    private SeqTableService seqService;
 
     @Override
-    public ChartOfAccount save(ChartOfAccount coa) {
+    public ChartOfAccount save(ChartOfAccount coa) throws Exception {
         if (coa.getCode() == null || coa.getCode().isEmpty()) {
             Integer macId = coa.getMacId();
             String compCode = coa.getCompCode();
-            coa.setCode(getCOACode(macId, compCode));
+            String coaCode = getCOACode(macId, compCode);
+            ChartOfAccount valid = findById(coaCode);
+            if (valid == null) {
+                coa.setCode(coaCode);
+            } else {
+                throw new DuplicateException("Duplicate Account Code");
+            }
         }
-
         return dao.save(coa);
     }
 
@@ -140,5 +145,10 @@ public class COAServiceImpl implements COAService {
     @Override
     public List<ChartOfAccount> getUnusedCOA(String compCode) {
         return dao.getUnusedCOA(compCode);
+    }
+
+    @Override
+    public List<VCOA> getCOAView(String compCode) {
+        return dao.getCOAView(compCode);
     }
 }

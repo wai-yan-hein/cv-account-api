@@ -5,7 +5,7 @@
  */
 package com.cv.accountswing.dao;
 
-import com.cv.accountswing.entity.view.VAccOpeningD;
+import com.cv.accountswing.entity.temp.TmpOpeningClosing;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author winswe
  */
 @Repository
-public class COAOpeningDaoImpl extends AbstractDao<Long, VAccOpeningD> implements COAOpeningDao {
+public class COAOpeningDaoImpl extends AbstractDao<Long, TmpOpeningClosing> implements COAOpeningDao {
 
     @Override
     public void GenerateZero(String tranIdH, String compCode, String currCode) throws Exception {

@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cv.accountswing.service;
+package com.cv.accountswing.common;
 
 /**
  *
- * @author winswe
+ * @author Lenovo
  */
-public interface CSVFileService {
-    public void uploadCSVVoucher(String path, String compCode) throws Exception;
+public class DuplicateException extends Exception {
+
+    public DuplicateException(String message) {
+        super(message);
+    }
+
 }

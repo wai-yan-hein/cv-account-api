@@ -6,7 +6,6 @@
 package com.cv.accountswing.dao;
 
 import com.cv.accountswing.entity.temp.TmpOpeningClosing;
-import com.cv.accountswing.entity.view.VAccOpeningD;
 import java.util.List;
 
 /**
@@ -14,10 +13,6 @@ import java.util.List;
  * @author winswe
  */
 public interface COAOpeningDaoD {
-
-    public List<VAccOpeningD> search(String tranIdH);
-
-    public int delete(String tranId);
 
     public void insertFilter(String coaCode, int level, String opDate,
             String curr, String userCode) throws Exception;
@@ -45,7 +40,7 @@ public interface COAOpeningDaoD {
     public void genArAp(String compCode, String fromDate, String opDate, String tranDate,
             String coaCode, String currency, String dept, String cvId, String userCode) throws Exception;
 
-    public void genArAp1(String compCode, String fromDate, String opDate, String tranDate,
+    public void genArAp1(String compCode, String fromDate, String tranDate,
             String coaCode, String currency, String dept, String traderCode, String macId) throws Exception;
 
     public void getOpBalanceByTrader(String coaCode, String opDate,

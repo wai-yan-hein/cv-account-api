@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * @author WSwe
  */
 @Repository
-public class AccountDaoImpl extends AbstractDao<Integer, AppUser> implements AccountDao {
+public class UserDaoImpl extends AbstractDao<Integer, AppUser> implements UserDao {
     //private BCryptPasswordEncoder cryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override

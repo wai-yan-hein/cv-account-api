@@ -39,7 +39,8 @@ public class VCrDrVoucher implements java.io.Serializable {
     private Double ttlDr;
     private Double ttlCr;
 
-    @Id @Column(name="voucher_no")
+    @Id
+    @Column(name = "voucher_no")
     public String getVoucherNo() {
         return voucherNo;
     }
@@ -48,7 +49,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.voucherNo = voucherNo;
     }
 
-    @Column(name="comp_code")
+    @Column(name = "comp_code")
     public int getCompCode() {
         return compCode;
     }
@@ -57,7 +58,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.compCode = compCode;
     }
 
-    @Column(name="split_id")
+    @Column(name = "split_id")
     public int getSplitId() {
         return splitId;
     }
@@ -76,7 +77,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.glDate = glDate;
     }
 
-    @Column(name="dept_code")
+    @Column(name = "dept_code")
     public String getDeptId() {
         return deptId;
     }
@@ -85,7 +86,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.deptId = deptId;
     }
 
-    @Column(name="dept_name")
+    @Column(name = "dept_name")
     public String getDeptName() {
         return deptName;
     }
@@ -94,7 +95,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.deptName = deptName;
     }
 
-    @Column(name="dept_usr_code")
+    @Column(name = "dept_usr_code")
     public String getDeptUsrCode() {
         return deptUsrCode;
     }
@@ -103,7 +104,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.deptUsrCode = deptUsrCode;
     }
 
-    @Column(name="source_ac_id")
+    @Column(name = "source_ac_id")
     public String getSourceAccId() {
         return sourceAccId;
     }
@@ -112,7 +113,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.sourceAccId = sourceAccId;
     }
 
-    @Column(name="source_acc_name")
+    @Column(name = "source_acc_name")
     public String getSourceAccName() {
         return sourceAccName;
     }
@@ -121,7 +122,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.sourceAccName = sourceAccName;
     }
 
-    @Column(name="source_acc_code")
+    @Column(name = "source_acc_code")
     public String getSourceAccCode() {
         return sourceAccCode;
     }
@@ -130,7 +131,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.sourceAccCode = sourceAccCode;
     }
 
-    @Column(name="from_cur_id")
+    @Column(name = "from_cur_id")
     public String getCurrency() {
         return currency;
     }
@@ -139,7 +140,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.currency = currency;
     }
 
-    @Column(name="remark")
+    @Column(name = "remark")
     public String getRemark() {
         return remark;
     }
@@ -148,7 +149,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.remark = remark;
     }
 
-    @Column(name="from_desp")
+    @Column(name = "from_desp")
     public String getFromDesp() {
         return fromDesp;
     }
@@ -157,7 +158,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.fromDesp = fromDesp;
     }
 
-    @Column(name="to_desp")
+    @Column(name = "to_desp")
     public String getToDesp() {
         return toDesp;
     }
@@ -166,7 +167,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.toDesp = toDesp;
     }
 
-    @Column(name="naration")
+    @Column(name = "naration")
     public String getNaration() {
         return naration;
     }
@@ -175,7 +176,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.naration = naration;
     }
 
-    @Column(name="ttl_dr")
+    @Column(name = "ttl_dr")
     public Double getTtlDr() {
         return ttlDr;
     }
@@ -184,7 +185,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.ttlDr = ttlDr;
     }
 
-    @Column(name="ttl_cr")
+    @Column(name = "ttl_cr")
     public Double getTtlCr() {
         return ttlCr;
     }

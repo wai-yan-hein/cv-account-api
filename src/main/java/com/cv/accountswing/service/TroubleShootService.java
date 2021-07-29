@@ -5,13 +5,19 @@
  */
 package com.cv.accountswing.service;
 
-import com.cv.accountswing.entity.view.VCoaTree;
+import java.sql.ResultSet;
 import java.util.List;
 
 /**
  *
- * @author winswe
+ * @author Lenovo
  */
-public interface VCoaTreeService {
-    public List<VCoaTree> getCompanyCoa(String compCode);
+public interface TroubleShootService {
+
+    public ResultSet executeQuery(String query);
+
+    public List<String> shootTri() throws Exception;
+
+    public List<String> shootAPAR() throws Exception;
+
 }

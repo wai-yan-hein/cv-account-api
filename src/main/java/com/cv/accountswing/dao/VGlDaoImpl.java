@@ -183,7 +183,7 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
         }
 
         if (!strFilter.isEmpty()) {
-            strSql = strSql + " where " + strFilter + " order by o.glCode";
+            strSql = strSql + " where " + strFilter + " order by o.glDate";
         }
         LOGGER.info("Search VGL Query :" + strSql);
         List<VGl> listVGL = findHSQL(strSql);

@@ -5,12 +5,12 @@
  */
 package com.cv.accountswing.service;
 
-import com.cv.accountswing.dao.AccountDao;
 import com.cv.accountswing.entity.AppUser;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.cv.accountswing.dao.UserDao;
 
 /**
  *
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private AccountDao dao;
+    private UserDao dao;
     @Autowired
     private SeqTableService seqService;
 

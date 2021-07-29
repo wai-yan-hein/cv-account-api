@@ -13,7 +13,7 @@ import javax.naming.AuthenticationException;
  *
  * @author WSwe
  */
-public interface AccountDao {
+public interface UserDao {
 
     public AppUser saveAccount(AppUser au);
 

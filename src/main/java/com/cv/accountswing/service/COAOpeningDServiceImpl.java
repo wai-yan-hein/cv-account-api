@@ -7,7 +7,6 @@ package com.cv.accountswing.service;
 
 import com.cv.accountswing.dao.COAOpeningDaoD;
 import com.cv.accountswing.entity.temp.TmpOpeningClosing;
-import com.cv.accountswing.entity.view.VAccOpeningD;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,18 +22,6 @@ public class COAOpeningDServiceImpl implements COAOpeningDService {
 
     @Autowired
     private COAOpeningDaoD dao;
-
-    @Override
-    public List<VAccOpeningD> search(String tranIdH) {
-        List<VAccOpeningD> listAOD = dao.search(tranIdH);
-        return listAOD;
-    }
-
-    @Override
-    public int delete(String tranId) {
-        int cnt = dao.delete(tranId);
-        return cnt;
-    }
 
     @Override
     public void insertFilter(String coaCode, int level, String opDate,
@@ -83,9 +70,9 @@ public class COAOpeningDServiceImpl implements COAOpeningDService {
     }
 
     @Override
-    public void genArAp1(String compCode, String fromDate, String opDate, String tranDate,
+    public void genArAp1(String compCode, String fromDate, String tranDate,
             String coaCode, String currency, String dept, String traderCode, String userCode) throws Exception {
-        dao.genArAp1(compCode, fromDate, opDate, tranDate, coaCode, currency, dept, traderCode, userCode);
+        dao.genArAp1(compCode, fromDate, tranDate, coaCode, currency, dept, traderCode, userCode);
     }
 
     @Override
@@ -105,7 +92,7 @@ public class COAOpeningDServiceImpl implements COAOpeningDService {
     }
 
     @Override
-    public void genTriBalance1(String compCode, String opDate, String tranDate, 
+    public void genTriBalance1(String compCode, String opDate, String tranDate,
             String coaCode, String currency, String dept, String cvId,
             String userCode, String macId) throws Exception {
         dao.genTriBalance1(compCode, opDate, tranDate, coaCode, currency, dept, cvId, userCode, macId);
