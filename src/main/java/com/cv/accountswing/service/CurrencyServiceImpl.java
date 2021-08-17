@@ -7,7 +7,6 @@ package com.cv.accountswing.service;
 
 import com.cv.accountswing.dao.CurrencyDao;
 import com.cv.accountswing.entity.Currency;
-import com.cv.accountswing.entity.CurrencyKey;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,12 +26,6 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public Currency save(Currency cur) {
         cur = dao.save(cur);
-        return cur;
-    }
-
-    @Override
-    public Currency findById(CurrencyKey id) {
-        Currency cur = dao.findById(id);
         return cur;
     }
 

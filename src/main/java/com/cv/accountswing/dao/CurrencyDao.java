@@ -6,7 +6,6 @@
 package com.cv.accountswing.dao;
 
 import com.cv.accountswing.entity.Currency;
-import com.cv.accountswing.entity.CurrencyKey;
 import java.util.List;
 
 /**
@@ -16,8 +15,6 @@ import java.util.List;
 public interface CurrencyDao {
 
     public Currency save(Currency cur);
-
-    public Currency findById(CurrencyKey id);
 
     public Currency findById(String id);
 

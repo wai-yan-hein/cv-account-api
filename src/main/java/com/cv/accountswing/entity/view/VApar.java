@@ -19,13 +19,10 @@ import javax.persistence.Table;
 public class VApar implements java.io.Serializable {
 
     private VAparKey key;
-    private String traderId;
+    private String userCode;
     private String traderName;
-    private Double opening;
     private Double drAmt;
     private Double crAmt;
-    private Double closing;
-    private String accountCode;
 
     @EmbeddedId
     public VAparKey getKey() {
@@ -36,13 +33,13 @@ public class VApar implements java.io.Serializable {
         this.key = key;
     }
 
-    @Column(name = "trader_id")
-    public String getTraderId() {
-        return traderId;
+    @Column(name = "user_code")
+    public String getUserCode() {
+        return userCode;
     }
 
-    public void setTraderId(String traderId) {
-        this.traderId = traderId;
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 
     @Column(name = "trader_name")
@@ -52,15 +49,6 @@ public class VApar implements java.io.Serializable {
 
     public void setTraderName(String traderName) {
         this.traderName = traderName;
-    }
-
-    @Column(name = "opening")
-    public Double getOpening() {
-        return opening;
-    }
-
-    public void setOpening(Double opening) {
-        this.opening = opening;
     }
 
     @Column(name = "dr_amt")
@@ -80,23 +68,4 @@ public class VApar implements java.io.Serializable {
     public void setCrAmt(Double crAmt) {
         this.crAmt = crAmt;
     }
-
-    @Column(name = "closing")
-    public Double getClosing() {
-        return closing;
-    }
-
-    public void setClosing(Double closing) {
-        this.closing = closing;
-    }
-
-    @Column(name = "account_code")
-    public String getAccountCode() {
-        return accountCode;
-    }
-
-    public void setAccountCode(String accountCode) {
-        this.accountCode = accountCode;
-    }
-
 }

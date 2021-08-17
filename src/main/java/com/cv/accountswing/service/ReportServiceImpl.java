@@ -7,8 +7,6 @@ package com.cv.accountswing.service;
 
 import com.cv.accountswing.dao.COADao;
 import com.cv.accountswing.dao.ReportDao;
-import com.cv.accountswing.dao.TmpBalanceSheetDao;
-import com.cv.accountswing.dao.TmpProfitAndLostDao;
 import com.cv.accountswing.entity.ChartOfAccount;
 import com.cv.accountswing.entity.helper.BalanceSheetRetObj;
 import com.cv.accountswing.entity.helper.ProfitAndLostRetObj;
@@ -36,10 +34,6 @@ public class ReportServiceImpl implements ReportService {
     private ReportDao dao;
     @Autowired
     private COADao coaDao;
-    @Autowired
-    private TmpProfitAndLostDao tapDao;
-    @Autowired
-    private TmpBalanceSheetDao balDao;
 
     @Override
     public void genReport(String reportPath, String filePath, String fontPath,
@@ -62,54 +56,52 @@ public class ReportServiceImpl implements ReportService {
 
         from = Util1.toDateStrMYSQL(from, "dd/MM/yyyy");
         to = Util1.toDateStrMYSQL(to, "dd/MM/yyyy");
-        String tmpFrom = Util1.addDateTo(from, -1);
-        tmpFrom = Util1.toDateStrMYSQL(tmpFrom, "dd/MM/yyyy");
         String invCode = getCOACode(inventory, comp);
         inventory = invCode.equals("-") ? "'" + inventory + "'" : invCode;
         //Sales Income 
         for (String tmp : process) {
             switch (tmp) {
-                case "os":
+                case "os" -> {
                     try {
-                    String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),if(dr_amt>0,dr_amt*-1,cr_amt) acc_toal,\n"
-                            + "'" + comp + "'," + sortOrder + "," + macId + "\n"
-                            + "from tmp_op_cl\n"
-                            + "where mac_id = " + macId + " \n"
-                            + "and coa_code in (" + inventory + ")";
-                    dao.execSQLRpt(strInsert + "\n" + sql);
-                } catch (Exception e) {
-                    logger.error("OS :" + e.getMessage());
+                        String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),if(dr_amt>0,dr_amt*-1,cr_amt) acc_toal,\n"
+                                + "'" + comp + "'," + sortOrder + "," + macId + "\n"
+                                + "from tmp_tri\n"
+                                + "where mac_id = " + macId + " \n"
+                                + "and coa_code in (" + inventory + ")";
+                        dao.execSQLRpt(strInsert + "\n" + sql);
+                    } catch (Exception e) {
+                        logger.error("OS :" + e.getMessage());
+                    }
                 }
-                break;
-                case "cs":
-                   try {
-                    String strCS = "select coa_code,curr_code,dept_code,amount,\n"
-                            + "'" + comp + "'," + sortOrder + "," + macId + "\n"
-                            + "from stock_op_value\n"
-                            + "where  coa_code in (" + inventory + ")\n"
-                            + "and dept_code = '" + dept + "' or '-' ='" + dept + "'\n"
-                            + "and comp_code = '" + comp + "'\n"
-                            + "and curr_code = '" + currency + "'\n"
-                            + "and date(tran_date) = '" + to + "'";
-                    dao.execSQLRpt(strInsert + "\n" + strCS);
-                } catch (Exception e) {
-                    logger.error("CS : " + e.getMessage());
+                case "cs" -> {
+                    try {
+                        String strCS = "select coa_code,curr_code,dept_code,amount,\n"
+                                + "'" + comp + "'," + sortOrder + "," + macId + "\n"
+                                + "from stock_op_value\n"
+                                + "where  coa_code in (" + inventory + ")\n"
+                                + "and dept_code = '" + dept + "' or '-' ='" + dept + "'\n"
+                                + "and comp_code = '" + comp + "'\n"
+                                + "and (curr_code = '" + currency + "' or '-' = '" + currency + "')\n"
+                                + "and date(tran_date) = '" + to + "'";
+                        dao.execSQLRpt(strInsert + "\n" + strCS);
+                    } catch (Exception e) {
+                        logger.error("CS : " + e.getMessage());
+                    }
                 }
-                break;
-                default:
+                default -> {
                     String coaCode = getCOACode(tmp, comp);
                     coaCode = coaCode.equals("-") ? "" : coaCode;
                     try {
                         String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),if(dr_amt>0,dr_amt*-1,cr_amt) acc_toal,\n"
                                 + "'" + comp + "'," + sortOrder + "," + macId + "\n"
-                                + "from tmp_op_cl\n"
+                                + "from tmp_tri\n"
                                 + "where mac_id = " + macId + " \n"
                                 + "and coa_code in (" + coaCode + ")";
                         dao.execSQLRpt(strInsert + "\n" + sql);
                     } catch (Exception e) {
                         logger.error("Default : " + e.getMessage());
                     }
-                    break;
+                }
             }
             sortOrder++;
         }
@@ -141,24 +133,18 @@ public class ReportServiceImpl implements ReportService {
                     double ttl = rs.getDouble("acc_total");
                     int order = rs.getInt("sort_order");
                     switch (order) {
-                        case 1://Sale Income
+                        case 1 -> //Sale Income
                             obj.addSaleIncome(ttl);
-                            break;
-                        case 2://Opening Stock
+                        case 2 -> //Opening Stock
                             obj.addOPStock(ttl);
-                            break;
-                        case 3://Purchase
+                        case 3 -> //Purchase
                             obj.addPurchase(ttl);
-                            break;
-                        case 4://Closiing Stock
+                        case 4 -> //Closiing Stock
                             obj.addCLStock(ttl);
-                            break;
-                        case 5://Other Income
+                        case 5 -> //Other Income
                             obj.addOtherIncome(ttl);
-                            break;
-                        case 6://Other Expense
+                        case 6 -> //Other Expense
                             obj.addOtherExpense(ttl);
-                            break;
                     }
                 }
 
@@ -168,12 +154,6 @@ public class ReportServiceImpl implements ReportService {
         }
 
         return obj;
-    }
-
-    @Override
-    public void genGLReport(String from, String to, String sourceAcId, String acId, String compCode,
-            String desp, String fromCurr, String toCurr, String ref, String dept, String tranSource,
-            String vouNo, String cvId, String userCode, String glVouNo, String deptName, String traderName) {
     }
 
     @Override
@@ -191,7 +171,7 @@ public class ReportServiceImpl implements ReportService {
             String coaCode = getCOACode(tmp, compCode);
             String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),if(dr_amt>0,dr_amt*-1,cr_amt) acc_toal,\n"
                     + "'" + compCode + "'," + sortOrder + "," + macId + "\n"
-                    + "from tmp_op_cl\n"
+                    + "from tmp_tri\n"
                     + "where mac_id = " + macId + " \n"
                     + "and coa_code in (" + coaCode + ")";
             dao.execSQLRpt(strInsert + "\n" + sql);
@@ -233,22 +213,18 @@ public class ReportServiceImpl implements ReportService {
                     double ttl = rs.getDouble("acc_total");
                     int order = rs.getInt("sort_order");
                     switch (order) {
-                        case 1:
+                        case 1 ->
                             bs.setFixedAss(ttl);
-                            break;
-                        //curr
-                        case 2:
+                        case 2 ->
                             bs.setCurrentAss(ttl);
-                            break;
-                        //lia
-                        case 3:
+                        case 3 ->
                             bs.setLiabilitie(ttl);
-                            break;
-                        //capital
-                        case 4:
+                        case 4 ->
                             bs.setCapital(ttl);
-                            break;
                     }
+                    //curr
+                    //lia
+                    //capital
                 }
             }
         } catch (Exception ex) {
@@ -256,4 +232,65 @@ public class ReportServiceImpl implements ReportService {
         }
         return bs;
     }
+
+    @Override
+    public void genIncomeAndExpense(String process, String compCode, String macId) {
+        try {
+            int sortOrder = 1;
+            String[] tmp = process.split(",");
+            String strSqlDelete = "delete from tmp_in_ex where mac_id = '" + macId + "'";
+            dao.execSQLRpt(strSqlDelete);
+            String strInsert = "insert into tmp_in_ex(coa_code,cur_code,dept_code,\n "
+                    + "acc_total, comp_code, sort_order,mac_id)";
+            for (String code : tmp) {
+                String coaCode = getCOACode(code, compCode);
+                String sql = "select coa_code,curr_id,ifnull(dept_code,'-'),if(dr_amt>0,dr_amt*-1,cr_amt) acc_toal,\n"
+                        + "'" + compCode + "'," + sortOrder + "," + macId + "\n"
+                        + "from tmp_tri\n"
+                        + "where mac_id = " + macId + " \n"
+                        + "and coa_code in (" + coaCode + ")";
+                dao.execSQLRpt(strInsert + "\n" + sql);
+                sortOrder++;
+            }
+        } catch (Exception e) {
+            logger.error("genIncomeAndExpense : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ProfitAndLostRetObj calculateIncomeExpense(String compCode, String macId) {
+        ProfitAndLostRetObj pl = new ProfitAndLostRetObj();
+        String sql = "select sum(acc_total) acc_total,sort_order\n"
+                + "	from tmp_in_ex\n"
+                + "	where mac_id = " + macId + "\n"
+                + "		and comp_code = '" + compCode + "'\n"
+                + "group by sort_order";
+        ResultSet rs;
+        try {
+            rs = dao.executeSql(sql);
+            if (rs != null) {
+                while (rs.next()) {
+                    double ttl = rs.getDouble("acc_total");
+                    int order = rs.getInt("sort_order");
+                    switch (order) {
+                        case 1 ->
+                            pl.addSaleIncome(ttl);
+                        case 2 ->
+                            pl.addOtherIncome(ttl);
+                        case 3 ->
+                            pl.addPurchase(ttl);
+                        case 4 ->
+                            pl.addOtherExpense(ttl);
+                    }
+                    //curr
+                    //lia
+                    //capital
+                }
+            }
+        } catch (Exception ex) {
+            logger.error("calculateIncomeExpense : " + ex.getMessage());
+        }
+        return pl;
+    }
+
 }

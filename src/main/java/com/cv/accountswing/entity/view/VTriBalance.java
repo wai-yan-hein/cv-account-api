@@ -19,10 +19,8 @@ import javax.persistence.Table;
 public class VTriBalance implements java.io.Serializable {
 
     private VTriBalanceKey key;
-    private Double opening;
     private Double drAmt;
     private Double crAmt;
-    private Double closing;
     private String coaName;
     private String usrCoaCode;
     private Integer macId;
@@ -34,15 +32,6 @@ public class VTriBalance implements java.io.Serializable {
 
     public void setKey(VTriBalanceKey key) {
         this.key = key;
-    }
-
-    @Column(name = "opening")
-    public Double getOpening() {
-        return opening;
-    }
-
-    public void setOpening(Double opening) {
-        this.opening = opening;
     }
 
     @Column(name = "dr_amt")
@@ -61,15 +50,6 @@ public class VTriBalance implements java.io.Serializable {
 
     public void setCrAmt(Double crAmt) {
         this.crAmt = crAmt;
-    }
-
-    @Column(name = "closing")
-    public Double getClosing() {
-        return closing;
-    }
-
-    public void setClosing(Double closing) {
-        this.closing = closing;
     }
 
     @Column(name = "coa_name_eng")

@@ -32,12 +32,8 @@ public class Gl implements java.io.Serializable {
     private String sourceAcId;
     @Column(name = "account_id")
     private String accountId;
-    @Column(name = "to_cur_id")
-    private String toCurId;
-    @Column(name = "from_cur_id")
-    private String fromCurId;
-    @Column(name = "ex_rate")
-    private Float exRate;
+    @Column(name = "cur_code")
+    private String curCode;
     @Column(name = "dr_amt")
     private Float drAmt;
     @Column(name = "cr_amt")
@@ -50,12 +46,8 @@ public class Gl implements java.io.Serializable {
     private String vouNo;
     @Column(name = "trader_code")
     private String traderCode;
-    @Column(name = "cheque_no", length = 20)
-    private String chequeNo;
     @Column(name = "comp_code")
     private String compCode;
-    @Column(name = "gst")
-    private Float gst;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
     private Date createdDate;
@@ -68,8 +60,6 @@ public class Gl implements java.io.Serializable {
     private String createdBy;
     @Column(name = "tran_source", length = 25)
     private String tranSource;
-    @Column(name = "bank_code")
-    private String bankCode;
     @Column(name = "gl_vou_no", length = 25)
     private String glVouNo; //For general voucher system id
     @Column(name = "split_id")
@@ -78,18 +68,14 @@ public class Gl implements java.io.Serializable {
     private String intgUpdStatus; //For integration update status
     @Column(name = "remark", length = 500)
     private String remark;
-    @Column(name = "from_desp", length = 500)
-    private String fromDesp;
-    @Column(name = "to_desp", length = 500)
-    private String toDesp;
     @Column(name = "naration", length = 500)
     private String naration;
-    @Column(name = "project_id")
-    private Long projectId;
     @Column(name = "mac_id")
     private Integer macId;
     @Column(name = "ref_no")
     private String refNo;
+    @Column(name = "exchange_id")
+    private Integer exchangeId;
 
     public String getGlCode() {
         return glCode;
@@ -131,28 +117,12 @@ public class Gl implements java.io.Serializable {
         this.accountId = accountId;
     }
 
-    public String getToCurId() {
-        return toCurId;
-    }
-
-    public void setToCurId(String toCurId) {
-        this.toCurId = toCurId;
-    }
-
     public String getFromCurId() {
-        return fromCurId;
+        return curCode;
     }
 
-    public void setFromCurId(String fromCurId) {
-        this.fromCurId = fromCurId;
-    }
-
-    public Float getExRate() {
-        return exRate;
-    }
-
-    public void setExRate(Float exRate) {
-        this.exRate = exRate;
+    public void setFromCurId(String curCode) {
+        this.curCode = curCode;
     }
 
     public Float getDrAmt() {
@@ -203,14 +173,6 @@ public class Gl implements java.io.Serializable {
         this.traderCode = traderCode;
     }
 
-    public String getChequeNo() {
-        return chequeNo;
-    }
-
-    public void setChequeNo(String chequeNo) {
-        this.chequeNo = chequeNo;
-    }
-
     public String getCompCode() {
         return compCode;
     }
@@ -251,28 +213,12 @@ public class Gl implements java.io.Serializable {
         this.createdBy = createdBy;
     }
 
-    public Float getGst() {
-        return gst;
-    }
-
-    public void setGst(Float gst) {
-        this.gst = gst;
-    }
-
     public String getTranSource() {
         return tranSource;
     }
 
     public void setTranSource(String tranSource) {
         this.tranSource = tranSource;
-    }
-
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
     }
 
     public String getGlVouNo() {
@@ -307,36 +253,12 @@ public class Gl implements java.io.Serializable {
         this.remark = remark;
     }
 
-    public String getFromDesp() {
-        return fromDesp;
-    }
-
-    public void setFromDesp(String fromDesp) {
-        this.fromDesp = fromDesp;
-    }
-
-    public String getToDesp() {
-        return toDesp;
-    }
-
-    public void setToDesp(String toDesp) {
-        this.toDesp = toDesp;
-    }
-
     public String getNaration() {
         return naration;
     }
 
     public void setNaration(String naration) {
         this.naration = naration;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     public Integer getMacId() {
@@ -354,5 +276,22 @@ public class Gl implements java.io.Serializable {
     public void setRefNo(String refNo) {
         this.refNo = refNo;
     }
+
+    public String getCurCode() {
+        return curCode;
+    }
+
+    public void setCurCode(String curCode) {
+        this.curCode = curCode;
+    }
+
+    public Integer getExchangeId() {
+        return exchangeId;
+    }
+
+    public void setExchangeId(Integer exchangeId) {
+        this.exchangeId = exchangeId;
+    }
+    
 
 }

@@ -6,7 +6,6 @@
 package com.cv.accountswing.service;
 
 import com.cv.accountswing.entity.Currency;
-import com.cv.accountswing.entity.CurrencyKey;
 import java.util.List;
 
 /**
@@ -17,7 +16,6 @@ public interface CurrencyService {
 
     public Currency save(Currency cur);
 
-    public Currency findById(CurrencyKey id);
 
     public Currency findById(String id);
 

@@ -6,6 +6,7 @@
 package com.cv.accountswing.service;
 
 import com.cv.accountswing.common.DuplicateException;
+import com.cv.accountswing.dao.ExchangeDao;
 import com.cv.accountswing.dao.GlDao;
 import com.cv.accountswing.entity.Gl;
 import com.cv.accountswing.util.Util1;
@@ -26,10 +27,12 @@ public class GlServiceImpl implements GlService {
     private GlDao dao;
     @Autowired
     private SeqTableService seqService;
+    @Autowired
+    private ExchangeDao exDao;
 
     @Override
     public Gl save(Gl gl) throws Exception {
-        if (gl.getGlCode() == null || gl.getGlCode().isEmpty()) {
+        if (Util1.isNull(gl.getGlCode())) {
             Integer macId = gl.getMacId();
             String compCode = gl.getCompCode();
             String period = Util1.toDateStr(Util1.getTodayDate(), "MM");
@@ -37,6 +40,7 @@ public class GlServiceImpl implements GlService {
             Gl valid = findById(glCode);
             if (valid == null) {
                 gl.setGlCode(glCode);
+                gl.setExchangeId(exDao.getLatestExId(compCode));
             } else {
                 throw new DuplicateException("Duplicate Code.");
             }

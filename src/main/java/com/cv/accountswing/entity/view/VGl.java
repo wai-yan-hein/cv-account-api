@@ -26,28 +26,22 @@ public class VGl implements java.io.Serializable {
     private String description;
     private String sourceAcId;
     private String accountId;
-    private String toCurId;
-    private String fromCurId;
-    private Double exRate;
+    private String curCode;
     private Double drAmt;
     private Double crAmt;
     private String reference;
     private String deptId;
     private String vouNo;
     private String traderCode;
-    private String chequeNo;
     private String compCode;
-    private Double gst;
     private Date createdDate;
     private Date modifyDate;
     private String modifyBy;
     private String createdBy;
     private String tranSource;
-    private String bankCode;
     private String srcAccName;
     private String accName;
-    private String fCurName;
-    private String tCurName;
+    private String curName;
     private String deptName;
     private String deptUsrCode;
     private String traderName;
@@ -59,12 +53,16 @@ public class VGl implements java.io.Serializable {
     private String sourceAccParent;
     private String accParent;
     private String remark;
-    private String fromDesp;
-    private String toDesp;
     private String naration;
-    private Long projectId;
     private Integer macId;
     private String refNo;
+    private Integer exchangeId;
+
+    public VGl(String curCode, Double drAmt, Double crAmt) {
+        this.curCode = curCode;
+        this.drAmt = drAmt;
+        this.crAmt = crAmt;
+    }
 
     public VGl() {
     }
@@ -116,31 +114,13 @@ public class VGl implements java.io.Serializable {
         this.accountId = accountId;
     }
 
-    @Column(name = "to_cur_id")
-    public String getToCurId() {
-        return toCurId;
+    @Column(name = "cur_code")
+    public String getCurCode() {
+        return curCode;
     }
 
-    public void setToCurId(String toCurId) {
-        this.toCurId = toCurId;
-    }
-
-    @Column(name = "from_cur_id")
-    public String getFromCurId() {
-        return fromCurId;
-    }
-
-    public void setFromCurId(String fromCurId) {
-        this.fromCurId = fromCurId;
-    }
-
-    @Column(name = "ex_rate")
-    public Double getExRate() {
-        return exRate;
-    }
-
-    public void setExRate(Double exRate) {
-        this.exRate = exRate;
+    public void setCurCode(String curCode) {
+        this.curCode = curCode;
     }
 
     @Column(name = "dr_amt")
@@ -197,15 +177,6 @@ public class VGl implements java.io.Serializable {
         this.traderCode = traderCode;
     }
 
-    @Column(name = "cheque_no", length = 20)
-    public String getChequeNo() {
-        return chequeNo;
-    }
-
-    public void setChequeNo(String chequeNo) {
-        this.chequeNo = chequeNo;
-    }
-
     @Column(name = "comp_code")
     public String getCompCode() {
         return compCode;
@@ -253,15 +224,6 @@ public class VGl implements java.io.Serializable {
         this.createdBy = createdBy;
     }
 
-    @Column(name = "gst")
-    public Double getGst() {
-        return gst;
-    }
-
-    public void setGst(Double gst) {
-        this.gst = gst;
-    }
-
     @Column(name = "tran_source", length = 25)
     public String getTranSource() {
         return tranSource;
@@ -269,15 +231,6 @@ public class VGl implements java.io.Serializable {
 
     public void setTranSource(String tranSource) {
         this.tranSource = tranSource;
-    }
-
-    @Column(name = "bank_code")
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
     }
 
     @Column(name = "source_acc_name")
@@ -296,24 +249,6 @@ public class VGl implements java.io.Serializable {
 
     public void setAccName(String accName) {
         this.accName = accName;
-    }
-
-    @Column(name = "fcur_name")
-    public String getfCurName() {
-        return fCurName;
-    }
-
-    public void setfCurName(String fCurName) {
-        this.fCurName = fCurName;
-    }
-
-    @Column(name = "tcur_name")
-    public String gettCurName() {
-        return tCurName;
-    }
-
-    public void settCurName(String tCurName) {
-        this.tCurName = tCurName;
     }
 
     @Column(name = "dept_name")
@@ -415,24 +350,6 @@ public class VGl implements java.io.Serializable {
         this.remark = remark;
     }
 
-    @Column(name = "from_desp", length = 500)
-    public String getFromDesp() {
-        return fromDesp;
-    }
-
-    public void setFromDesp(String fromDesp) {
-        this.fromDesp = fromDesp;
-    }
-
-    @Column(name = "to_desp", length = 500)
-    public String getToDesp() {
-        return toDesp;
-    }
-
-    public void setToDesp(String toDesp) {
-        this.toDesp = toDesp;
-    }
-
     @Column(name = "naration", length = 500)
     public String getNaration() {
         return naration;
@@ -440,15 +357,6 @@ public class VGl implements java.io.Serializable {
 
     public void setNaration(String naration) {
         this.naration = naration;
-    }
-
-    @Column(name = "project_id")
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     @Column(name = "mac_id")
@@ -467,6 +375,24 @@ public class VGl implements java.io.Serializable {
 
     public void setRefNo(String refNo) {
         this.refNo = refNo;
+    }
+
+    @Column(name = "fcur_name")
+    public String getCurName() {
+        return curName;
+    }
+
+    public void setCurName(String curName) {
+        this.curName = curName;
+    }
+
+    @Column(name = "exchange_id")
+    public Integer getExchangeId() {
+        return exchangeId;
+    }
+
+    public void setExchangeId(Integer exchangeId) {
+        this.exchangeId = exchangeId;
     }
 
 }

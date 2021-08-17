@@ -131,7 +131,7 @@ public class VCrDrVoucher implements java.io.Serializable {
         this.sourceAccCode = sourceAccCode;
     }
 
-    @Column(name = "from_cur_id")
+    @Column(name = "cur_code")
     public String getCurrency() {
         return currency;
     }

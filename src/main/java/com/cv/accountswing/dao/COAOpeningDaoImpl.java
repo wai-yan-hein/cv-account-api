@@ -35,23 +35,16 @@ public class COAOpeningDaoImpl extends AbstractDao<Long, TmpOpeningClosing> impl
     @Override
     public void GenerateZeroGL(String opDate, String userCode, String compCode,
             String currCode, String dept, String coaGroup) throws Exception {
-        /*String strSql = "insert into gl(gl_date, source_ac_id, from_cur_id, dr_amt, " +
-                "cr_amt, user_code, comp_code, tran_source, created_date) " +
-                "select '" + opDate + "', coa_code, cur_code, 0, 0, '" + userCode + "', '" +
-                compCode + "', 'OPENING', sysdate() from v_coa_curr where level >= 3 and cur_code = '" + currCode + 
-                "' and coa_code not in (select coa_code from coa_excludion where option_desp = 'COAOPENING')";*/
-
         if (!dept.equals("-") && !currCode.equals("-")) {
-            String strSql = "insert into gl(gl_date, source_ac_id, from_cur_id, dr_amt, "
+            String strSql = "insert into gl(gl_date, source_ac_id, cur_code, dr_amt, "
                     + "cr_amt, user_code, comp_code, tran_source, created_date, dept_code) "
                     + "select '" + opDate + "', child_coa_code, cur_code, 0, 0, '" + userCode + "', '"
                     + compCode + "', 'OPENING', sysdate(), '" + dept
                     + "' from v_coa_tree where coa_level2 >= 3 and cur_code = '" + currCode
-                    + "' and coa_code not in (select coa_code from coa_excludion where option_desp = 'COAOPENING')"
                     + " and comp_code1 = '" + compCode + "' and coa_parent1 in (" + coaGroup + ")";
             execSQL(strSql);
 
-            String strSql1 = "insert into gl(gl_date, source_ac_id, from_cur_id, dr_amt, "
+            String strSql1 = "insert into gl(gl_date, source_ac_id, cur_code, dr_amt, "
                     + "cr_amt, user_code, comp_code, tran_source, created_date, dept_code, trader_code) "
                     + "select '" + opDate + "', coa_code, '" + currCode + "', 0, 0, '" + userCode + "', '"
                     + compCode + "', 'OPENING', sysdate(), '" + dept + "', trader_code"
@@ -64,7 +57,7 @@ public class COAOpeningDaoImpl extends AbstractDao<Long, TmpOpeningClosing> impl
     @Override
     public void deleteOpeningGL(String opDate, String compCode, String currCode, String dept) throws Exception {
         String strSql = "delete from gl where gl_date = '" + opDate + "' and tran_source = 'OPENING' and "
-                + "comp_code = " + compCode + " and from_cur_id = '" + currCode + "'";
+                + "comp_code = " + compCode + " and cur_code = '" + currCode + "'";
 
         if (!dept.equals("-")) {
             strSql = strSql + " and dept_code = '" + dept + "'";
@@ -75,14 +68,13 @@ public class COAOpeningDaoImpl extends AbstractDao<Long, TmpOpeningClosing> impl
     @Override
     public void insertCoaOpening(String opDate, String compCode, String currCode,
             String dept, String userCode) throws Exception {
-        String strSql = "insert into gl(gl_date, source_ac_id, from_cur_id, dr_amt, "
+        String strSql = "insert into gl(gl_date, source_ac_id, cur_code, dr_amt, "
                 + "cr_amt, user_code, comp_code, tran_source, created_date, dept_code) "
                 + "select '" + opDate + "', coa_code, cur_code, 0, 0, '" + userCode + "', '"
                 + compCode + "', 'OPENING', sysdate(), dept_code "
                 + " from v_coa_curr_dept where level >= 3 "
                 + "and (cur_code = '" + currCode + "' or '" + currCode + "' = '-')"
                 + " and (dept_code = '" + dept + "' or '" + dept + "' = '-')"
-                + " and coa_code not in (select coa_code from coa_excludion where option_desp = 'COAOPENING')"
                 + " and comp_code = " + compCode;
         execSQL(strSql);
     }
@@ -95,7 +87,6 @@ public class COAOpeningDaoImpl extends AbstractDao<Long, TmpOpeningClosing> impl
                     + "select '" + opDate + "', child_coa_code, '" + currCode + "', 0, 0, '" + userCode + "', '"
                     + compCode + "', 'OPENING', sysdate(), '" + dept
                     + "' from v_coa_tree where coa_level2 >= 3 \n"
-                    + "and coa_code not in (select coa_code from coa_excludion where option_desp = 'COAOPENING')"
                     + " and comp_code1 = '" + compCode + "' and coa_parent1 in (" + coaGroup + ")";
             execSQL(strSql);
 

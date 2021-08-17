@@ -75,13 +75,6 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
                 strFilter = strFilter + " and o.reference like '" + reference + "%'";
             }
         }
-        /*if (!acId.equals("-")) {
-        if (strFilter.isEmpty()) {
-        strFilter = "(o.accountId = '" + acId + "' or o.sourceAcId = '" + acId + "')";
-        } else {
-        strFilter = strFilter + " and (o.accountId = '" + acId + "' or o.sourceAcId = '" + acId + "')";
-        }
-        }*/
         if (!acId.equals("-")) {
             if (strFilter.isEmpty()) {
                 strFilter = "(o.accountId in (" + acId + ") or o.sourceAcId in (" + acId + ")";
@@ -112,14 +105,6 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
                 strFilter = strFilter + " and o.vouNo like '%" + vouNo + "%'";
             }
         }
-
-        /*if(!cvId.equals("-")){
-            if(strFilter.isEmpty()){
-                strFilter = "o.traderCode like '%" + cvId + "%'";
-            }else{
-                strFilter = strFilter + " and o.traderCode like '%" + cvId + "%'";
-            }
-        }*/
         if (!cvId.equals("-")) {
             if (strFilter.isEmpty()) {
                 strFilter = "o.traderCode = '" + cvId + "'";
@@ -181,11 +166,17 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
                 strFilter = strFilter + " and o.crAmt = " + crdAmt + "";
             }
         }
+        if (!frmCurr.equals("-")) {
+            if (strFilter.isEmpty()) {
+                strFilter = "o.curCode = '" + frmCurr + "'";
+            } else {
+                strFilter = strFilter + " and o.curCode = '" + frmCurr + "'";
+            }
+        }
 
         if (!strFilter.isEmpty()) {
             strSql = strSql + " where " + strFilter + " order by o.glDate";
         }
-        LOGGER.info("Search VGL Query :" + strSql);
         List<VGl> listVGL = findHSQL(strSql);
         return listVGL;
     }
@@ -228,9 +219,9 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
 
         if (!frmCurr.equals("-")) {
             if (strFilter.isEmpty()) {
-                strFilter = "o.fromCurId = '" + frmCurr + "'";
+                strFilter = "o.curCode = '" + frmCurr + "'";
             } else {
-                strFilter = strFilter + " and o.fromCurId = '" + frmCurr + "'";
+                strFilter = strFilter + " and o.curCode = '" + frmCurr + "'";
             }
         }
 
@@ -308,7 +299,7 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
                 + "        gl.source_ac_id AS source_ac_id,\n"
                 + "        gl.account_id AS account_id,\n"
                 + "        gl.to_cur_id AS to_cur_id,\n"
-                + "        gl.from_cur_id AS from_cur_id,\n"
+                + "        gl.cur_code AS cur_code,\n"
                 + "        gl.ex_rate AS ex_rate,\n"
                 + "        gl.dr_amt AS dr_amt,\n"
                 + "        gl.cr_amt AS cr_amt,\n"
@@ -346,7 +337,7 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
                 + "        (((((((gl\n"
                 + "        LEFT JOIN chart_of_account coa1 ON (gl.source_ac_id = coa1.coa_code))\n"
                 + "        LEFT JOIN chart_of_account coa2 ON (gl.account_id = coa2.coa_code))\n"
-                + "        JOIN currency cur1 ON (gl.from_cur_id = cur1.cur_code))\n"
+                + "        JOIN currency cur1 ON (gl.cur_code = cur1.cur_code))\n"
                 + "        LEFT JOIN trader t ON (gl.trader_code = t.code))\n"
                 + "        LEFT JOIN currency cur2 ON (gl.to_cur_id = cur2.cur_code))\n"
                 + "        LEFT JOIN department dept ON (gl.dept_code = dept.dept_code))\n"
@@ -413,9 +404,9 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
 
         if (!frmCurr.equals("-")) {
             if (strFilter.isEmpty()) {
-                strFilter = "o.fromCurId = '" + frmCurr + "'";
+                strFilter = "o.curCode = '" + frmCurr + "'";
             } else {
-                strFilter = strFilter + " and o.fromCurId = '" + frmCurr + "'";
+                strFilter = strFilter + " and o.curCode = '" + frmCurr + "'";
             }
         }
 

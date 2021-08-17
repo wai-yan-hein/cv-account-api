@@ -151,7 +151,7 @@ public class COADaoImpl extends AbstractDao<String, ChartOfAccount> implements C
     public List<ChartOfAccount> getAllChild(String parent, String compCode) {
         String strSql = "select o from ChartOfAccount o where o.compCode = '"
                 + compCode + "' and o.code = '" + parent + "'";
-        List<ChartOfAccount> listAllChild = findHSQL(strSql);
+            List<ChartOfAccount> listAllChild = findHSQL(strSql);
         if (listAllChild == null) {
             listAllChild = new ArrayList();
         }

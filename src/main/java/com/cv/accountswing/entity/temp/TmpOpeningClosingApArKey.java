@@ -16,8 +16,8 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class TmpOpeningClosingApArKey implements Serializable{
-    private String coaId;
-    private String currId;
+    private String coaCode;
+    private String curCode;
     private String userCode;
     private Integer cvId;
     private String deptId;
@@ -26,20 +26,20 @@ public class TmpOpeningClosingApArKey implements Serializable{
     
     @Column(name="coa_code", nullable=false, length=25)
     public String getCoaId() {
-        return coaId;
+        return coaCode;
     }
 
-    public void setCoaId(String coaId) {
-        this.coaId = coaId;
+    public void setCoaId(String coaCode) {
+        this.coaCode = coaCode;
     }
 
     @Column(name="curr_id", nullable=false, length=15)
     public String getCurrId() {
-        return currId;
+        return curCode;
     }
 
-    public void setCurrId(String currId) {
-        this.currId = currId;
+    public void setCurrId(String curCode) {
+        this.curCode = curCode;
     }
 
     @Column(name="user_code", nullable=false, length=15)
@@ -72,8 +72,8 @@ public class TmpOpeningClosingApArKey implements Serializable{
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 23 * hash + Objects.hashCode(this.coaId);
-        hash = 23 * hash + Objects.hashCode(this.currId);
+        hash = 23 * hash + Objects.hashCode(this.coaCode);
+        hash = 23 * hash + Objects.hashCode(this.curCode);
         hash = 23 * hash + Objects.hashCode(this.userCode);
         hash = 23 * hash + Objects.hashCode(this.cvId);
         hash = 23 * hash + Objects.hashCode(this.deptId);
@@ -89,10 +89,10 @@ public class TmpOpeningClosingApArKey implements Serializable{
             return false;
         }
         final TmpOpeningClosingApArKey other = (TmpOpeningClosingApArKey) obj;
-        if (!Objects.equals(this.coaId, other.coaId)) {
+        if (!Objects.equals(this.coaCode, other.coaCode)) {
             return false;
         }
-        if (!Objects.equals(this.currId, other.currId)) {
+        if (!Objects.equals(this.curCode, other.curCode)) {
             return false;
         }
         if (!Objects.equals(this.userCode, other.userCode)) {

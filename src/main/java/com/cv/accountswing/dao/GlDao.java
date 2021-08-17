@@ -30,5 +30,4 @@ public interface GlDao {
     public void backup(String glCode, String option, String userCode, Integer macId);
 
     public int deleteGV(String vouNo, String option, String userCode, Integer macId);
-
 }

@@ -88,5 +88,9 @@ public class ProfitAndLostRetObj {
         costOfSale = (ttlOPStock + ttlPurchase - ttlCLStock);
         return costOfSale;
     }
-    
+
+    public double getIncomeExpense() {
+        return (ttlSaleIncome + ttlOtherIncome) + (ttlPurchase + ttlOtherExpense);
+    }
+
 }

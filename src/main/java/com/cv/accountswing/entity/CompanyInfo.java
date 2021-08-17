@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -71,6 +72,9 @@ public class CompanyInfo implements java.io.Serializable {
     private Integer macId;
     @Column(name = "user_code")
     private String userCode;
+    @ManyToOne
+    @JoinColumn(name = "cur_code")
+    private Currency currency;
 
     public String getCompCode() {
         return compCode;
@@ -235,6 +239,14 @@ public class CompanyInfo implements java.io.Serializable {
 
     public void setRoleCode(String roleCode) {
         this.roleCode = roleCode;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
 }

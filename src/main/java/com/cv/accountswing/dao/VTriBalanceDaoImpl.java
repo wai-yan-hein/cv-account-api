@@ -7,7 +7,6 @@ package com.cv.accountswing.dao;
 
 import com.cv.accountswing.entity.temp.TmpOpeningClosingKey;
 import com.cv.accountswing.entity.view.VTriBalance;
-import com.cv.accountswing.util.Util1;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +18,28 @@ import org.springframework.stereotype.Repository;
 public class VTriBalanceDaoImpl extends AbstractDao<TmpOpeningClosingKey, VTriBalance> implements VTriBalanceDao {
 
     @Override
-    public List<VTriBalance> getTriBalance(String macId, String coaCode) {
-        String strSql = Util1.isNull(coaCode)
-                ? "select o from VTriBalance o where o.macId = " + macId + ""
-                : "select o from VTriBalance o where o.key.coaId in (" + coaCode + ") and o.macId = " + macId + "";
-        List<VTriBalance> listVTB = findHSQL(strSql);
-        return listVTB;
+    public List<VTriBalance> getTriBalance(String macId, String coaCode, String currency) {
+        String hsql = "select o from VTriBalance o";
+        String strFilter = "";
+        if (!coaCode.equals("-")) {
+            if (strFilter.isEmpty()) {
+                strFilter = "o.key.coaCode in (" + coaCode + ")";
+            } else {
+                strFilter = strFilter + " and o.key.coaCode in (" + coaCode + ")";
+            }
+        }
+        if (!currency.equals("-")) {
+            if (strFilter.isEmpty()) {
+                strFilter = "o.key.curCode ='" + currency + "'";
+            } else {
+                strFilter = strFilter + " and o.key.curCode ='" + currency + "'";
+            }
+        }
+        if (!strFilter.isEmpty()) {
+            hsql = hsql + " where " + strFilter + " and o.macId = " + macId + " order by o.usrCoaCode";
+        } else {
+            hsql = hsql + " where  o.macId = " + macId + " order by o.usrCoaCode";
+        }
+        return findHSQL(hsql);
     }
 }

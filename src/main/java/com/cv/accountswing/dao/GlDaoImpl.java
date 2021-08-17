@@ -111,9 +111,9 @@ public class GlDaoImpl extends AbstractDao<String, Gl> implements GlDao {
 
         if (!frmCurr.equals("-")) {
             if (strFilter.isEmpty()) {
-                strFilter = "o.fromCurId = '" + frmCurr + "'";
+                strFilter = "o.curCode = '" + frmCurr + "'";
             } else {
-                strFilter = strFilter + " and o.fromCurId = '" + frmCurr + "'";
+                strFilter = strFilter + " and o.curCode = '" + frmCurr + "'";
             }
         }
 

@@ -17,40 +17,29 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class TmpOpeningClosingKey implements Serializable {
 
-    private String coaId;
-    private String currId;
-    private String userCode;
+    private String coaCode;
+    private String curCode;
     private Integer macId;
 
     public TmpOpeningClosingKey() {
     }
 
     @Column(name = "coa_code", nullable = false, length = 25)
-    public String getCoaId() {
-        return coaId;
+    public String getCoaCode() {
+        return coaCode;
     }
 
-    public void setCoaId(String coaId) {
-        this.coaId = coaId;
+    public void setCoaCode(String coaCode) {
+        this.coaCode = coaCode;
     }
 
     @Column(name = "curr_id", nullable = false, length = 15)
-    public String getCurrId() {
-        return currId;
+    public String getCurCode() {
+        return curCode;
     }
 
-    public void setCurrId(String currId) {
-        this.currId = currId;
-    }
-
-    @Column(name = "user_code", nullable = false, length = 15)
-
-    public String getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
+    public void setCurCode(String curCode) {
+        this.curCode = curCode;
     }
 
     @Column(name = "mac_id")
@@ -64,11 +53,10 @@ public class TmpOpeningClosingKey implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.coaId);
-        hash = 67 * hash + Objects.hashCode(this.currId);
-        hash = 67 * hash + Objects.hashCode(this.userCode);
-        hash = 67 * hash + Objects.hashCode(this.macId);
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.coaCode);
+        hash = 89 * hash + Objects.hashCode(this.curCode);
+        hash = 89 * hash + Objects.hashCode(this.macId);
         return hash;
     }
 
@@ -84,19 +72,13 @@ public class TmpOpeningClosingKey implements Serializable {
             return false;
         }
         final TmpOpeningClosingKey other = (TmpOpeningClosingKey) obj;
-        if (!Objects.equals(this.coaId, other.coaId)) {
+        if (!Objects.equals(this.coaCode, other.coaCode)) {
             return false;
         }
-        if (!Objects.equals(this.currId, other.currId)) {
+        if (!Objects.equals(this.curCode, other.curCode)) {
             return false;
         }
-        if (!Objects.equals(this.userCode, other.userCode)) {
-            return false;
-        }
-        if (!Objects.equals(this.macId, other.macId)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.macId, other.macId);
     }
-
+    
 }
