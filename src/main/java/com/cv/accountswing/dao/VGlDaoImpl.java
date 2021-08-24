@@ -59,7 +59,19 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
                 strFilter = strFilter + " and o.glDate <= '" + Util1.toDateStrMYSQL(to, "dd/MM/yyyy") + "'";
             }
         }
-
+        if (!tranSource.equals("-")) {
+            if (strFilter.isEmpty()) {
+                strFilter = "o.tranSource = '" + tranSource + "'";
+            } else {
+                strFilter = strFilter + " and o.tranSource = '" + tranSource + "'";
+            }
+        } else {
+            if (strFilter.isEmpty()) {
+                strFilter = "(o.tranSource <> 'GV')";
+            } else {
+                strFilter = strFilter + " and (o.tranSource <> 'GV')";
+            }
+        }
         if (!desp.equals("-")) {
             if (strFilter.isEmpty()) {
                 strFilter = "o.description like '" + desp + "%'";
@@ -175,7 +187,7 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
         }
 
         if (!strFilter.isEmpty()) {
-            strSql = strSql + " where " + strFilter + " order by o.glDate";
+            strSql = strSql + " where " + strFilter + " order by o.glDate,o.glCode,o.tranSource";
         }
         List<VGl> listVGL = findHSQL(strSql);
         return listVGL;
@@ -481,9 +493,9 @@ public class VGlDaoImpl extends AbstractDao<String, VGl> implements VGlDao {
             }
         } else {
             if (strFilter.isEmpty()) {
-                strFilter = "(o.tranSource <> 'OPENING' or o.tranSource is null)";
+                strFilter = "(o.tranSource <> 'GV')";
             } else {
-                strFilter = strFilter + " and (o.tranSource <> 'OPENING' or o.tranSource is null)";
+                strFilter = strFilter + " and (o.tranSource <> 'GV')";
             }
         }
 

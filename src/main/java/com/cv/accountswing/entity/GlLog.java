@@ -4,12 +4,13 @@
  */
 package com.cv.accountswing.entity;
 
+import com.cv.inv.entity.MachineInfo;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,11 +20,24 @@ import javax.persistence.TemporalType;
  * @author WSwe
  */
 @Entity
-@Table(name = "gl")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Gl implements java.io.Serializable {
+@Table(name = "gl_log")
+public class GlLog implements java.io.Serializable {
 
     @Id
+    @Column(name = "log_gl_code")
+    private String logGlCode;
+    @ManyToOne
+    @JoinColumn(name = "log_user_code")
+    private AppUser logUser;
+    @ManyToOne
+    @JoinColumn(name = "log_mac_id")
+    private MachineInfo logMac;
+    @Column(name = "log_status")
+    private String logStatus;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "log_date")
+    private Date logDate;
+    //gl
     @Column(name = "gl_code", unique = true, nullable = false)
     private String glCode;
     @Temporal(TemporalType.DATE)
@@ -38,9 +52,9 @@ public class Gl implements java.io.Serializable {
     @Column(name = "cur_code")
     private String curCode;
     @Column(name = "dr_amt")
-    private Double drAmt;
+    private Float drAmt;
     @Column(name = "cr_amt")
-    private Double crAmt;
+    private Float crAmt;
     @Column(name = "reference", length = 50)
     private String reference;
     @Column(name = "dept_code")
@@ -79,6 +93,46 @@ public class Gl implements java.io.Serializable {
     private String refNo;
     @Column(name = "exchange_id")
     private Integer exchangeId;
+
+    public String getLogGlCode() {
+        return logGlCode;
+    }
+
+    public void setLogGlCode(String logGlCode) {
+        this.logGlCode = logGlCode;
+    }
+
+    public AppUser getLogUser() {
+        return logUser;
+    }
+
+    public void setLogUser(AppUser logUser) {
+        this.logUser = logUser;
+    }
+
+    public MachineInfo getLogMac() {
+        return logMac;
+    }
+
+    public void setLogMac(MachineInfo logMac) {
+        this.logMac = logMac;
+    }
+
+    public String getLogStatus() {
+        return logStatus;
+    }
+
+    public void setLogStatus(String logStatus) {
+        this.logStatus = logStatus;
+    }
+
+    public Date getLogDate() {
+        return logDate;
+    }
+
+    public void setLogDate(Date logDate) {
+        this.logDate = logDate;
+    }
 
     public String getGlCode() {
         return glCode;
@@ -120,27 +174,27 @@ public class Gl implements java.io.Serializable {
         this.accountId = accountId;
     }
 
-    public String getFromCurId() {
+    public String getCurCode() {
         return curCode;
     }
 
-    public void setFromCurId(String curCode) {
+    public void setCurCode(String curCode) {
         this.curCode = curCode;
     }
 
-    public Double getDrAmt() {
+    public Float getDrAmt() {
         return drAmt;
     }
 
-    public void setDrAmt(Double drAmt) {
+    public void setDrAmt(Float drAmt) {
         this.drAmt = drAmt;
     }
 
-    public Double getCrAmt() {
+    public Float getCrAmt() {
         return crAmt;
     }
 
-    public void setCrAmt(Double crAmt) {
+    public void setCrAmt(Float crAmt) {
         this.crAmt = crAmt;
     }
 
@@ -280,14 +334,6 @@ public class Gl implements java.io.Serializable {
         this.refNo = refNo;
     }
 
-    public String getCurCode() {
-        return curCode;
-    }
-
-    public void setCurCode(String curCode) {
-        this.curCode = curCode;
-    }
-
     public Integer getExchangeId() {
         return exchangeId;
     }
@@ -295,5 +341,6 @@ public class Gl implements java.io.Serializable {
     public void setExchangeId(Integer exchangeId) {
         this.exchangeId = exchangeId;
     }
+
 
 }

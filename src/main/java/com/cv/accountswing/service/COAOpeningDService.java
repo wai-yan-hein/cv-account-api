@@ -29,9 +29,8 @@ public interface COAOpeningDService {
             String clDae, int level, String curr, String compCode, String dept,
             String macId, String traderCode) throws Exception;
 
-    public void genTriBalance(String compCode, String opDate,
-            String tranDate, String coaCode, String currency, String dept,
-            String cvId, String userCode, String macId) throws Exception;
+    public void genTriBalance(String compCode, String stDate,
+            String enDate, String opDate, String currency, String dept, String macId) throws Exception;
 
     public void genArAp(String compCode, String fromDate, String tranDate,
             String coaCode, String currency, String dept, String traderCode, String userCode) throws Exception;

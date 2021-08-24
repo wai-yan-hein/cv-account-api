@@ -155,8 +155,7 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, TmpOpeningClosing> imp
 
     @Override
     public void genTriBalance(String compCode, String stDate,
-            String enDate, String coaCode, String currency, String dept,
-            String cvId, String macId) throws Exception {
+            String enDate, String opDate, String currency, String dept, String macId) throws Exception {
         deleteTmp(Integer.parseInt(macId));
         String strSql1 = "insert into tmp_tri(coa_code, curr_id, dr_amt, cr_amt,mac_id,dept_code) \n"
                 + "select coa_code, curr_id,if(sum(dr_amt-cr_amt)>0, sum(dr_amt-cr_amt),0), if(sum(dr_amt-cr_amt)<0, sum(dr_amt-cr_amt)*-1,0)," + macId + ",dept_code\n"
@@ -164,7 +163,7 @@ public class COAOpeningDaoDImpl extends AbstractDao<Long, TmpOpeningClosing> imp
                 + "	select op.source_acc_id as coa_code, op.cur_code as curr_id,\n"
                 + "		   sum(ifnull(op.dr_amt,0)) dr_amt, sum(ifnull(op.cr_amt,0)) cr_amt,dept_code\n"
                 + "	from  coa_opening op\n"
-                + "	where date(op.op_date) = '" + stDate + "' \n"
+                + "	where date(op.op_date) = '" + opDate + "' \n"
                 + "		and (op.dept_code = '" + dept + "' or '-' = '" + dept + "' )\n"
                 + "             and (cur_code = '" + currency + "' or '-'='" + currency + "')\n"
                 + "	group by op.source_acc_id, op.cur_code\n"

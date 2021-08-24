@@ -25,13 +25,17 @@ public interface ReportService {
 
     public BalanceSheetRetObj getBSCalculateValue(String compCode, String macId) throws Exception;
 
-    public void genBalanceSheet(String from, String to, String dept,
-            String compCode, String curr, String macId, String process, String inventory) throws Exception;
+    public void genBalanceSheet(String toDate, String compCode, String curr, String macId, String process, String inventory) throws Exception;
 
     public Object getAggResult(String sql);
 
     public void genIncomeAndExpense(String process, String compCode, String macId);
 
     public ProfitAndLostRetObj calculateIncomeExpense(String compCode, String macId);
+
+    public void deleteOpTemp(String macId) throws Exception;
+
+    public double genOpBalance(String process, String opDate, String clDate,
+            String endDate, String curr, String compCode, String dept, String macId) throws Exception;
 
 }

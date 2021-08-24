@@ -179,24 +179,6 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         }
     }
 
-    public String getGlLogSql(String glCode, String actionType, String userCode, Integer macId) {
-        String strSql = "insert \n"
-                + "into gl_log(gl_code, gl_date, created_date, modify_date, modify_by, description,\n"
-                + "            source_ac_id, account_id,cur_code, ex_rate, dr_amt,\n"
-                + "            cr_amt, reference, dept_code, voucher_no, user_code, trader_code, \n"
-                + "            cheque_no, comp_code, gst, tran_source, gl_vou_no, split_id, \n"
-                + "            intg_upd_status, remark, from_desp, to_desp, naration,\n"
-                + "            ref_no,mac_id,log_user_code,log_mac_id)\n"
-                + "     select gl_code, gl_date, created_date, modify_date, modify_by, description,\n"
-                + "            source_ac_id, account_id,cur_code, ex_rate, dr_amt,\n"
-                + "            cr_amt, reference, dept_code, voucher_no, user_code, trader_code, \n"
-                + "            cheque_no, comp_code, gst, '" + actionType + "', gl_vou_no, split_id, \n"
-                + "            intg_upd_status, remark, from_desp, to_desp, naration,\n"
-                + "            ref_no, mac_id,'" + userCode + "'," + macId + "\n"
-                + "	from gl where gl_code = '" + glCode + "'";
-        return strSql;
-    }
-
     public Object getAggregate(String sql) {
         NativeQuery query = getSession().createSQLQuery(sql);
         Object obj = query.uniqueResult();

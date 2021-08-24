@@ -61,6 +61,13 @@ public class AppUser implements java.io.Serializable {
     @Column(name = "comp_code")
     private String compCode;
 
+    public AppUser(String appUserCode) {
+        this.appUserCode = appUserCode;
+    }
+
+    public AppUser() {
+    }
+
     public String getAppUserCode() {
         return appUserCode;
     }
@@ -194,5 +201,4 @@ public class AppUser implements java.io.Serializable {
         this.compCode = compCode;
     }
 
-    
 }

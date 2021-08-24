@@ -68,48 +68,48 @@ public class VOpeningDaoImpl extends AbstractDao<Integer, VCOAOpening> implement
         //New
         if (!traderType.equals("-")) {
             switch (traderType) {
-                case "CUSSUP":
+                case "CUSSUP" -> {
                     if (strFilter.isEmpty()) {
                         strFilter = "o.traderType is not null";
                     } else {
                         strFilter = strFilter + " and o.traderType is not null";
                     }
-                    break;
-                case "CUSCOA":
+                }
+                case "CUSCOA" -> {
                     if (strFilter.isEmpty()) {
                         strFilter = "(o.traderType = 'C' or o.traderType is null)";
                     } else {
                         strFilter = strFilter + " and (o.traderType = 'C' or o.traderType is null)";
                     }
-                    break;
-                case "SUPCOA":
+                }
+                case "SUPCOA" -> {
                     if (strFilter.isEmpty()) {
                         strFilter = "(o.traderType = 'S' or o.traderType is null)";
                     } else {
                         strFilter = strFilter + " and (o.traderType = 'S' or o.traderType is null)";
                     }
-                    break;
-                case "CUS":
+                }
+                case "CUS" -> {
                     if (strFilter.isEmpty()) {
                         strFilter = "o.traderType = 'C'";
                     } else {
                         strFilter = strFilter + " and o.traderType = 'C'";
                     }
-                    break;
-                case "SUP":
+                }
+                case "SUP" -> {
                     if (strFilter.isEmpty()) {
                         strFilter = "o.traderType = 'S'";
                     } else {
                         strFilter = strFilter + " and o.traderType = 'S'";
                     }
-                    break;
-                case "COA":
+                }
+                case "COA" -> {
                     if (strFilter.isEmpty()) {
                         strFilter = "o.traderType is null";
                     } else {
                         strFilter = strFilter + " and o.traderType is null";
                     }
-                    break;
+                }
             }
         }
         if (!coaParent.equals("-")) {
@@ -128,7 +128,7 @@ public class VOpeningDaoImpl extends AbstractDao<Integer, VCOAOpening> implement
         }
 
         if (!strFilter.isEmpty()) {
-            hsql = hsql + " where " + strFilter;
+            hsql = hsql + " where " + strFilter + " order by o.coaUsrCode,o.opId";
         }
         List<VCOAOpening> listOpening = findHSQL(hsql);
         return listOpening;

@@ -51,6 +51,14 @@ public class Region implements java.io.Serializable {
     @Column(name = "user_code")
     private String userCode;
 
+    public Region(String regCode, String regionName) {
+        this.regCode = regCode;
+        this.regionName = regionName;
+    }
+
+    public Region() {
+    }
+
     public String getRegionName() {
         return regionName;
     }

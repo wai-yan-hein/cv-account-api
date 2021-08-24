@@ -25,8 +25,8 @@ public interface COAOpeningDaoD {
 
     public List<TmpOpeningClosing> getOpBalanceGL(String coaCode, String macId);
 
-    public void genTriBalance(String compCode, String opDate, String tranDate, String coaCode,
-            String currency, String dept, String cvId, String macId) throws Exception;
+    public void genTriBalance(String compCode, String stDate, String enDate, String opDate,
+            String currency, String dept, String macId) throws Exception;
 
     public void genArAp(String compCode, String fromDate, String tranDate,
             String coaCode, String currency, String dept, String traderCode, String macId) throws Exception;

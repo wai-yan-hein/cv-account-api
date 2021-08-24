@@ -6,6 +6,7 @@
 package com.cv.accountswing.service;
 
 import com.cv.accountswing.common.DuplicateException;
+import com.cv.accountswing.dao.BackupDao;
 import com.cv.accountswing.dao.ExchangeDao;
 import com.cv.accountswing.dao.GlDao;
 import com.cv.accountswing.entity.Gl;
@@ -27,6 +28,8 @@ public class GlServiceImpl implements GlService {
     private GlDao dao;
     @Autowired
     private SeqTableService seqService;
+    @Autowired
+    private BackupDao backupDao;
     @Autowired
     private ExchangeDao exDao;
 

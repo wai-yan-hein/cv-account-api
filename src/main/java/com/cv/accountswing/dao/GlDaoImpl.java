@@ -8,6 +8,7 @@ package com.cv.accountswing.dao;
 import com.cv.accountswing.util.Util1;
 import com.cv.accountswing.entity.Gl;
 import java.util.List;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,15 +20,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GlDaoImpl extends AbstractDao<String, Gl> implements GlDao {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GlDaoImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(GlDaoImpl.class);
+    @Autowired
+    private SeqTableDao dao;
 
     @Override
     public Gl save(Gl gl) throws Exception {
-        if (gl.getGlCode() != null) {
-            //String strBakSql = getGlLogSql(gl.getGlId(),"GL-UPDATE");
-            //execSQL(strBakSql);
-        }
-
         persist(gl);
         return gl;
     }
@@ -216,10 +214,22 @@ public class GlDaoImpl extends AbstractDao<String, Gl> implements GlDao {
     @Override
     public void backup(String glCode, String option, String userCode, Integer macId) {
         try {
-            String backup = getGlLogSql(glCode, option, userCode, macId);
-            execSQL(backup);
+            String logCode = getGlLogCode(macId, userCode);
+            String sql = "insert into gl_log(gl_code, gl_date, created_date, modify_date, modify_by, \n"
+                    + "description, source_ac_id, account_id, cur_code, dr_amt, cr_amt, \n"
+                    + "reference, dept_code, voucher_no, user_code, trader_code, comp_code, \n"
+                    + "tran_source, gl_vou_no, split_id, intg_upd_status, remark, naration, \n"
+                    + "ref_no, mac_id, exchange_id,log_status,log_user_code,log_mac_id,log_gl_code)\n"
+                    + "select gl_code, gl_date, created_date, modify_date, modify_by, \n"
+                    + "description, source_ac_id, account_id, cur_code, dr_amt, cr_amt, \n"
+                    + "reference, dept_code, voucher_no, user_code, trader_code, comp_code, \n"
+                    + "tran_source, gl_vou_no, split_id, intg_upd_status, remark, naration, \n"
+                    + "ref_no, mac_id, exchange_id,'" + option + "','" + userCode + "'," + macId + ",'" + logCode + "'\n"
+                    + "from gl\n"
+                    + "where gl_code = '" + glCode + "'";
+            execSQL(sql);
         } catch (Exception ex) {
-            log.error("backup Gl : " + ex.getMessage());
+            log.error("backup : " + ex.getMessage());
         }
     }
 
@@ -234,5 +244,12 @@ public class GlDaoImpl extends AbstractDao<String, Gl> implements GlDao {
             });
         }
         return execUpdateOrDelete(delHsql);
+    }
+
+    private String getGlLogCode(Integer macId, String compCode) {
+        String period = Util1.toDateStr(Util1.getTodayDate(), "MM");
+        int seqNo = dao.getSequence(macId, "GL-LOG", period, "-");
+        String glLogCode = String.format("%0" + 3 + "d", macId) + period + String.format("%0" + 9 + "d", seqNo);
+        return glLogCode;
     }
 }

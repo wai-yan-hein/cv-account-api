@@ -33,6 +33,10 @@ public class MachineInfo implements java.io.Serializable {
     @Column(name = "updated_date")
     private Date updatedDate;
 
+    public MachineInfo(Integer machineId) {
+        this.machineId = machineId;
+    }
+
     public MachineInfo() {
     }
 

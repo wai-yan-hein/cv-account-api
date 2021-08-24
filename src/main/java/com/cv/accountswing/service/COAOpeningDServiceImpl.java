@@ -48,7 +48,7 @@ public class COAOpeningDServiceImpl implements COAOpeningDService {
 
     @Override
     public List<TmpOpeningClosing> getOpBalanceGL(String coaCode, String opDate,
-            String clDae, int level, String curr, String compCode, String dept, 
+            String clDae, int level, String curr, String compCode, String dept,
             String macId, String traderCode) throws Exception {
         dao.genOpBalanceGL(coaCode, opDate, clDae, level, curr, compCode, dept, macId, traderCode);
         List<TmpOpeningClosing> listTOC = dao.getOpBalanceGL(coaCode, macId);
@@ -56,10 +56,9 @@ public class COAOpeningDServiceImpl implements COAOpeningDService {
     }
 
     @Override
-    public void genTriBalance(String compCode, String opDate, String tranDate,
-            String coaCode, String currency, String dept, String cvId,
-            String userCode, String macId) throws Exception {
-        dao.genTriBalance(compCode, opDate, tranDate, coaCode, currency, dept, cvId, macId);
+    public void genTriBalance(String compCode, String stDate, String enDate,
+            String opDate, String currency, String dept, String macId) throws Exception {
+        dao.genTriBalance(compCode, stDate, enDate, opDate, currency, dept, macId);
     }
 
     @Override

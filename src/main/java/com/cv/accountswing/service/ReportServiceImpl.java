@@ -157,8 +157,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public void genBalanceSheet(String from, String to, String dept,
-            String compCode, String curr, String macId, String blProcess, String inventory) throws Exception {
+    public void genBalanceSheet(String toDate, String compCode, String curr, String macId, String blProcess, String inventory) throws Exception {
         String invCode = getCOACode(inventory, compCode);
         inventory = invCode.equals("-") ? "'" + inventory + "'" : invCode;
         String strSqlDelete = "delete from tmp_balance_sheet where mac_id = '" + macId + "'";
@@ -178,7 +177,7 @@ public class ReportServiceImpl implements ReportService {
             sortOrder++;
         }
         String updateSql = "update tmp_balance_sheet tmp,\n"
-                + "(select amount*(-1) acc_total,coa_code from stock_op_value where date(tran_date) = '" + to + "') op\n"
+                + "(select amount*(-1) acc_total,coa_code from stock_op_value where date(tran_date) = '" + toDate + "') op\n"
                 + "set tmp.acc_total = op.acc_total\n"
                 + "where tmp.acc_code = op.coa_code ";
         dao.execSQLRpt(updateSql);
@@ -291,6 +290,73 @@ public class ReportServiceImpl implements ReportService {
             logger.error("calculateIncomeExpense : " + ex.getMessage());
         }
         return pl;
+    }
+
+    @Override
+    public void deleteOpTemp(String macId) throws Exception {
+        String delSql = "delete from tmp_op_cl where mac_id = " + macId;
+        String delSql1 = "delete from tmp_tri where mac_id = " + macId;
+        dao.execSQLRpt(delSql, delSql1);
+    }
+
+    @Override
+    public double genOpBalance(String process, String opDate, String clDate,
+            String endDate, String curr, String compCode, String dept, String macId) throws Exception {
+        String[] coaCodes = process.split(",");
+        double ttlOP = 0;
+        if (coaCodes.length > 0) {
+            for (String coaCode : coaCodes) {
+                String opSql = "insert into tmp_op_cl(coa_code, curr_id,opening,mac_id) \n"
+                        + "select a.acc_code, a.cur_code, sum(a.balance) balance, " + macId + "\n"
+                        + "from (\n"
+                        + "select source_acc_id acc_code,cur_code,sum(ifnull(dr_amt,0))-sum(ifnull(cr_amt,0)) balance,\n"
+                        + "		sum(ifnull(dr_amt,0)) dr_amt, sum(ifnull(cr_amt,0)) cr_amt,trader_code\n"
+                        + "	from coa_opening \n"
+                        + "	where source_acc_id = '" + coaCode + "'\n"
+                        + "        and (dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
+                        + "        and comp_code = '" + compCode + "'\n"
+                        + "        and date(op_date) = '" + opDate + "'\n"
+                        + "        and (cur_code = '" + curr + "' or '-' ='" + curr + "')\n"
+                        + "      group by acc_code,cur_code\n"
+                        + "             union all\n"
+                        + "select '" + coaCode + "' acc_code ,cur_code cur_code, sum(get_dr_cr_amt(source_ac_id, account_id, '" + coaCode + "', \n"
+                        + "		ifnull(dr_amt,0), ifnull(cr_amt,0), 'DR')-get_dr_cr_amt(source_ac_id, \n"
+                        + "             account_id, '" + coaCode + "', ifnull(dr_amt,0), ifnull(cr_amt,0), 'CR')) balance, \n"
+                        + "		sum(ifnull(dr_amt,0)) dr_amt, sum(ifnull(cr_amt,0)) cr_amt,trader_code \n"
+                        + "     from gl\n"
+                        + "	where  (source_ac_id = '" + coaCode + "' or account_id = '" + coaCode + "') \n"
+                        + "		and date(gl_date)>= '" + opDate + "'\n"
+                        + "        and date(gl_date) < '" + clDate + "' \n"
+                        + "        and (dept_code = '" + dept + "' or '-' = '" + dept + "')\n"
+                        + "        and comp_code = '" + compCode + "'\n"
+                        + "        and (cur_code = '" + curr + "' or '-' ='" + curr + "')\n"
+                        + "	group by acc_code,cur_code) a \n"
+                        + "group by a.acc_code, a.cur_code";
+                dao.execSQLRpt(opSql);
+            }
+
+            String strSql = "insert into tmp_tri(coa_code, curr_id, dept_code, mac_id, dr_amt, cr_amt)\n"
+                    + "select toc.coa_code, toc.curr_id, gl.dept_code, " + macId + " as mac_id,\n"
+                    + "sum(get_dr_cr_amt(gl.source_ac_id, gl.account_id, toc.coa_code, gl.dr_amt, gl.cr_amt, 'DR')) dr_amt,\n"
+                    + "sum(get_dr_cr_amt(gl.source_ac_id, gl.account_id, toc.coa_code, gl.dr_amt, gl.cr_amt, 'CR')) cr_amt\n"
+                    + "from tmp_op_cl toc\n"
+                    + "join gl on (toc.coa_code = gl.source_ac_id or toc.coa_code = gl.account_id) and toc.curr_id = gl.cur_code\n"
+                    + "where gl.gl_date between '" + clDate + "' and '" + endDate + "' and toc.mac_id = " + macId + " \n"
+                    + "group by toc.coa_code, toc.curr_id, gl.dept_code";
+            dao.execSQLRpt(strSql);
+
+            strSql = "select sum(ifnull(opening,0)) as ttl_op\n"
+                    + "from tmp_op_cl\n"
+                    + "where mac_id = " + macId;
+            ResultSet rs = dao.executeSql(strSql);
+
+            if (rs != null) {
+                if (rs.next()) {
+                    ttlOP = rs.getDouble("ttl_op");
+                }
+            }
+        }
+        return ttlOP;
     }
 
 }
